@@ -67,10 +67,16 @@
                 </tbody>
             </table>
         </div>
-        
+
         <div id="script-actions">
-            <a href="#" tal:attributes="href string:${portal_url}/@@add_pythonscript">Add Script</a>
-            <a href="#">Check syntax</a>
+            <a href="#"
+               tal:attributes="href string:${portal_url}/@@add_pythonscript">
+                   Add Script
+            </a>
+            <a href="#"
+               tal:attributes="href string:${portal_url}/@@checksyntax_pythonscript">
+                   Check syntax
+            </a>
         </div>
 
     </div>
