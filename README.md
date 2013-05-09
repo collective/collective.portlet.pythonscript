@@ -1,0 +1,2 @@
+collective.portlet.pythonscript
+===============================
