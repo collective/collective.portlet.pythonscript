@@ -17,6 +17,7 @@
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
         class=".controlpanel.PythonScriptControlPanel"
         permission="cmf.ManagePortal"
+        template="controlpanel.pt"
         />
 
 </configure>
