@@ -2,6 +2,8 @@ import persistent
 from zope.interface import Interface, implements
 from zope.schema import TextLine, Text, Bool
 from zope.schema.fieldproperty import FieldProperty
+from zope.container import contained
+from plone.app.content.interfaces import INameFromTitle
 
 class IPythonScript(Interface):
     """Interface for Python Script objects."""
@@ -25,10 +27,10 @@ class IPythonScript(Interface):
         required=True
     ) # TODO: constraint on syntax
 
-class PythonScript(persistent.Persistent):
+class PythonScript(contained.Contained):
     """Python Script object."""
     
-    implements(IPythonScript)
+    implements(IPythonScript, INameFromTitle)
     
     # Default values of attributes.
     title = FieldProperty(IPythonScript['title'])

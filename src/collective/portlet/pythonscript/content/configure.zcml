@@ -1,27 +1,18 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:five="http://namespaces.zope.org/five"
     xmlns:i18n="http://namespaces.zope.org/i18n"
-    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="collective.portlet.pythonscript">
 
   <adapter
-    for=""
-    provides=""
-    factoru=""
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    provides=".scriptmanager.IPythonScriptManager"
+    factory=".scriptmanager.pythonScriptManagerAdapter"
     />
 
-  <include package=".browser" />
+  <adapter
+    for=".scriptmanager.IPythonScriptManager"
+    factory=".scriptmanager.ScriptNameChooser"
+    provides="zope.container.interfaces.INameChooser"
+    />
 
-  <five:registerPackage package="." initialize=".initialize" />
-
-  <genericsetup:registerProfile
-      name="PythonScript Portlet"
-      title="collective.portlet.pythonscript"
-      directory="profiles/default"
-      description="Installs the collective.portlet.pythonscript package"
-      provides="Products.GenericSetup.interfaces.EXTENSION"
-      />
-  <!-- -*- extra stuff goes here -*- -->
-  
 </configure>

@@ -5,9 +5,10 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="collective.portlet.pythonscript">
 
-  <include package=".browser" />
-
   <five:registerPackage package="." initialize=".initialize" />
+  
+  <include package=".browser" />
+  <include package=".content" />
 
   <genericsetup:registerProfile
       name="PythonScript Portlet"
