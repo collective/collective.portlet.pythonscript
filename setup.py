@@ -41,7 +41,8 @@ setup(name='collective.portlet.pythonscript',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
-          'Plone'
+          'Plone',
+          'plone.directives.form'
       ],
       extras_require={'test': ['plone.app.testing']},
       entry_points="""

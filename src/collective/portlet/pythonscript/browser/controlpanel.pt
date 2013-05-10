@@ -9,13 +9,11 @@
 <body>
 
 <metal:main fill-slot="prefs_configlet_main">
-    
-    
-    
+
     <h1 class="documentFirstHeading" i18n:translate="">
         Manage Python Scripts
     </h1>
-    
+
     <div class="documentDescription" i18n:translate="">
         Add and manage Python Scripts that can be used by Python Script portlets.
     </div>
