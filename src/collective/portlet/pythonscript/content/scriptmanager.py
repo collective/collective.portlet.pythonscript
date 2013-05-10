@@ -1,10 +1,7 @@
-from Acquisition import Explicit
 from zope.interface import Interface, implements
 from zope.annotation.interfaces import IAnnotations
-from BTrees import OOBTree
 from plone.app.content.namechooser import NormalizingNameChooser
 from zope.container.interfaces import INameChooser
-from zope.container.contained import NameChooser
 from zope.container import folder
 from collective.portlet.pythonscript.content.pythonscript import IPythonScript
 from zope.component._api import getUtility
@@ -16,6 +13,9 @@ class IPythonScriptManager(Interface):
 
     def addScript(self, script):
         """Adds new Python Script to store and returns ID of saved script."""
+
+    def hasScript(self, name):
+        """Returns whether the manager has got a script of given name."""
 
     def getScript(self, name):
         """Retrieves script of given name from store."""
@@ -49,7 +49,7 @@ class ScriptNameChooser(NormalizingNameChooser):
     def _getCheckId(self, object):
         """Return a function that can act as the check_id script.
         """
-        return lambda id_, required: id_ in self.context
+        return lambda id_, required: self.context.hasScript(id_)
 
 class PythonScriptManager(folder.Folder):
     """Store and manager of Python Scripts."""
@@ -63,6 +63,10 @@ class PythonScriptManager(folder.Folder):
         name = name_chooser.chooseName(None, script)
         self[name] = script
         return name
+
+    def hasScript(self, name):
+        """Returns whether the manager has got a script of given name."""
+        return name in self and IPythonScript.providedBy(self[name])
 
     def getScript(self, name):
         """Retrieves script of given name from store."""
@@ -81,7 +85,12 @@ class PythonScriptManager(folder.Folder):
         """Yields tuples of (scriptId, script) for all scripts in store.
         Scripts are returned ordered by titles.
         """
-        by_title = [(self[name].title, name) for name in self]
+        by_title = []
+        for name in self:
+            script = self[name]
+            if not IPythonScript.providedBy(script):
+                continue
+            by_title.append((script.title, name))
         # Sort by titles.
         by_title.sort(key=lambda t: t[0])
         for _title, name in by_title:

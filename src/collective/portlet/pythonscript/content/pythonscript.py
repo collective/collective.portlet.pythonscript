@@ -27,7 +27,7 @@ class IPythonScript(Interface):
         required=True
     ) # TODO: constraint on syntax
 
-class PythonScript(contained.Contained):
+class PythonScript(persistent.Persistent):
     """Python Script object."""
     
     implements(IPythonScript, INameFromTitle)

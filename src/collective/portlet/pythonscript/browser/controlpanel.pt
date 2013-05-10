@@ -44,7 +44,8 @@
                         tal:attributes="class python:oddrow and 'odd' or 'even'"> 
 	                        <td tal:content="script/title">Title</td>
 	                        <td class="listingCheckbox">
-	                           X
+	                           <tal:tag condition="script/enabled" i18n:translate="">Yes</tal:tag>
+	                           <tal:tag condition="not: script/enabled" i18n:translate="">No</tal:tag>
 	                        </td>
 	                        <td>
 	                            <a href="#"
