@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<portlets
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="plone">
+  <portlet
+    addview="collective.portlet.PythonScript"
+    title="Python Script Portlet"
+    description="A portlet that can list catalog items returned from a Python Script."
+    i18n:attributes="title title_python_script_portlet;
+                     description description_python_script_portlet">
+    <for interface="plone.app.portlets.interfaces.IColumn" />
+    <for interface="plone.app.portlets.interfaces.IDashboard" />
+  </portlet>
+</portlets>
