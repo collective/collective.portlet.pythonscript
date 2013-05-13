@@ -19,11 +19,18 @@
         permission="cmf.ManagePortal"
         template="controlpanel.pt"
         />
-    
+
     <browser:page
         name="add_pythonscript"
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
         class=".add_pythonscript.AddPythonScriptForm"
+        permission="cmf.ManagePortal"
+        />
+
+    <browser:page
+        name="edit_pythonscript"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".edit_pythonscript.EditPythonScriptForm"
         permission="cmf.ManagePortal"
         />
 
