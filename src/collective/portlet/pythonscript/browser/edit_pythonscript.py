@@ -2,6 +2,8 @@ import urllib
 from urlparse import urlparse, parse_qs
 
 from plone.directives import form
+from Products.CMFPlone import PloneMessageFactory as _
+
 from collective.portlet.pythonscript.content.pythonscript import IPythonScript
 from collective.portlet.pythonscript.content.scriptmanager import IPythonScriptManager
 
@@ -11,8 +13,8 @@ class EditPythonScriptForm(form.SchemaEditForm):
     schema = IPythonScript
 
     # TODO: i18n
-    label = u"Edit Python Script"
-    description = u"Edit Python Script that can be used as catalog query in Python Script portlet"
+    label = _(u"Edit Python Script")
+    description = _(u"Edit Python Script that can be used as catalog query in Python Script portlet")
 
     def getContent(self):
         """Get edited object."""

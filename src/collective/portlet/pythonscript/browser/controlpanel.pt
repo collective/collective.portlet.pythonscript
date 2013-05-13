@@ -57,7 +57,7 @@
 	                        <td>
 	                            <a href="#"
 	                               i18n:translate=""
-	                               tal:attributes="href string:${portal_url}/@@remove_pythonscript?id=${script/id}">
+	                               tal:attributes="href string:${portal_url}/@@delete_pythonscript?id=${script/id}">
 	                                   Delete
 	                            </a>
 	                        </td>

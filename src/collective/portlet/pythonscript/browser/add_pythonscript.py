@@ -1,7 +1,9 @@
+from z3c.form.form import applyChanges
 from plone.directives import form
+from Products.CMFPlone import PloneMessageFactory as _
+
 from collective.portlet.pythonscript.content.pythonscript import IPythonScript,\
     PythonScript
-from z3c.form.form import applyChanges
 from collective.portlet.pythonscript.content.scriptmanager import IPythonScriptManager
 
 class AddPythonScriptForm(form.SchemaAddForm):
@@ -9,8 +11,8 @@ class AddPythonScriptForm(form.SchemaAddForm):
 
     schema = IPythonScript
 
-    label = u"Add new Python Script"
-    description = u"Create new Python Script that can be used as catalog query in Python Script portlet"
+    label = _(u"Add new Python Script")
+    description = _(u"Create new Python Script that can be used as catalog query in Python Script portlet")
 
     def create(self, data):
         """Create new object."""

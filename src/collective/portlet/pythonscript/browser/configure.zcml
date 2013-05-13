@@ -33,5 +33,12 @@
         class=".edit_pythonscript.EditPythonScriptForm"
         permission="cmf.ManagePortal"
         />
+    
+    <browser:page
+        name="delete_pythonscript"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".delete_pythonscript.DeletePythonScriptForm"
+        permission="cmf.ManagePortal"
+        />
 
 </configure>
