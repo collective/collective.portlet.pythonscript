@@ -49,18 +49,20 @@
 	                           <tal:tag condition="not: script/enabled" i18n:translate="">No</tal:tag>
 	                        </td>
 	                        <td>
-	                            <a href="#"
-	                               tal:condition="script/enabled"
-                                   i18n:translate=""
-                                   tal:attributes="href string:${portal_url}/@@disable_pythonscript?id=${script/path}">
-                                       Disable
-                                </a>
-                                <a href="#"
-                                   tal:condition="not: script/enabled"
-                                   i18n:translate=""
-                                   tal:attributes="href string:${portal_url}/@@enable_pythonscript?id=${script/path}">
-                                       Enable
-                                </a>
+	                           <form action="#" method="post"
+	                                 tal:condition="script/enabled"
+	                                 tal:attributes="action string:${portal_url}/@@disable_pythonscript">
+	                               <input type="hidden" name="id" value="" tal:attributes="value script/path">
+	                               <span tal:replace="structure context/@@authenticator/authenticator"></span>
+	                               <input type="submit" name="button" value="Disable" i18n:attributes="value">
+                               </form>
+                               <form action="#" method="post"
+                                     tal:condition="not: script/enabled"
+                                     tal:attributes="action string:${portal_url}/@@enable_pythonscript">
+                                   <input type="hidden" name="id" value="" tal:attributes="value script/path">
+                                   <span tal:replace="structure context/@@authenticator/authenticator"></span>
+                                   <input type="submit" name="button" value="Enable" i18n:attributes="value">
+                               </form>
 	                        </td>
                     </tr>
                     </tal:loop>
@@ -69,14 +71,16 @@
         </div>
 
         <div id="script-actions">
-            <a href="#"
-               tal:attributes="href string:${portal_url}/@@rescan_pythonscript">
-                   Rescan scripts
-            </a>
-            <a href="#"
-               tal:attributes="href string:${portal_url}/@@checksyntax_pythonscript">
-                   Check syntax
-            </a>
+            <form action="#" method="post"
+                  tal:attributes="action string:${portal_url}/@@rescan_pythonscript">
+                <span tal:replace="structure context/@@authenticator/authenticator"></span>
+                <input type="submit" name="button" value="Rescan scripts" i18n:attributes="value">
+            </form>
+            <form action="#" method="post"
+                  tal:attributes="action string:${portal_url}/@@checksyntax_pythonscript">
+                <span tal:replace="structure context/@@authenticator/authenticator"></span>
+                <input type="submit" name="button" value="Check syntax" i18n:attributes="value">
+            </form>
         </div>
 
     </div>
