@@ -15,7 +15,7 @@
     </h1>
 
     <div class="documentDescription" i18n:translate="">
-        Add and manage Python Scripts that can be used by Python Script portlets.
+        Manage Python Scripts that can be used by Python Script portlets.
     </div>
     
     <div id="content-core">
@@ -32,9 +32,9 @@
                 <thead>
                     <tr>
                         <th i18n:translate="">Title</th>
+                        <th i18n:translate="">Path</th>
                         <th i18n:translate="" class="listingCheckbox">Enabled</th>
-                        <th i18n:translate="">Edit</th>
-                        <th i18n:translate="">Delete</th>
+                        <th i18n:translate="">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,23 +43,24 @@
                         class="odd"
                         tal:attributes="class python:oddrow and 'odd' or 'even'"> 
 	                        <td tal:content="script/title">Title</td>
+	                        <td tal:content="script/path">/PloneSite/myscript</td>
 	                        <td class="listingCheckbox">
 	                           <tal:tag condition="script/enabled" i18n:translate="">Yes</tal:tag>
 	                           <tal:tag condition="not: script/enabled" i18n:translate="">No</tal:tag>
 	                        </td>
 	                        <td>
 	                            <a href="#"
-	                               i18n:translate=""
-	                               tal:attributes="href string:${portal_url}/@@edit_pythonscript?id=${script/id}">
-	                                   Edit
-	                            </a>
-	                        </td>
-	                        <td>
-	                            <a href="#"
-	                               i18n:translate=""
-	                               tal:attributes="href string:${portal_url}/@@delete_pythonscript?id=${script/id}">
-	                                   Delete
-	                            </a>
+	                               tal:condition="script/enabled"
+                                   i18n:translate=""
+                                   tal:attributes="href string:${portal_url}/@@disable_pythonscript?id=${script/path}">
+                                       Disable
+                                </a>
+                                <a href="#"
+                                   tal:condition="not: script/enabled"
+                                   i18n:translate=""
+                                   tal:attributes="href string:${portal_url}/@@enable_pythonscript?id=${script/path}">
+                                       Enable
+                                </a>
 	                        </td>
                     </tr>
                     </tal:loop>
@@ -69,8 +70,8 @@
 
         <div id="script-actions">
             <a href="#"
-               tal:attributes="href string:${portal_url}/@@add_pythonscript">
-                   Add Script
+               tal:attributes="href string:${portal_url}/@@rescan_pythonscript">
+                   Rescan scripts
             </a>
             <a href="#"
                tal:attributes="href string:${portal_url}/@@checksyntax_pythonscript">

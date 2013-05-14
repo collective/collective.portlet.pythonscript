@@ -22,26 +22,26 @@
         />
 
     <browser:page
-        name="add_pythonscript"
+        name="rescan_pythonscript"
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-        class=".add_pythonscript.AddPythonScriptForm"
+        class=".rescan_pythonscript.RescanPythonScriptView"
         permission="cmf.ManagePortal"
         />
 
     <browser:page
-        name="edit_pythonscript"
+        name="enable_pythonscript"
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-        class=".edit_pythonscript.EditPythonScriptForm"
+        class=".edit_pythonscript.EnablePythonScriptView"
         permission="cmf.ManagePortal"
         />
-    
+
     <browser:page
-        name="delete_pythonscript"
+        name="disable_pythonscript"
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-        class=".delete_pythonscript.DeletePythonScriptForm"
+        class=".edit_pythonscript.DisablePythonScriptView"
         permission="cmf.ManagePortal"
         />
-    
+
     <!-- portlet -->
     <plone:portlet
         name="collective.portlet.PythonScript"

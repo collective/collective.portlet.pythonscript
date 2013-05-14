@@ -141,6 +141,14 @@ class PythonScriptPortletRenderer(base.Renderer):
         function = locals['wrapper']
         return function
 
+    def run_script(self, script):
+        """Execute Python Script."""
+        # Change the context of the script to point to current portlet context.
+        bound_script = script.__of__(self.context)
+        # Execute the script.
+        results = bound_script()
+        return results
+
     def wrap_results(self, results):
         """Wrap results into form that is renderable for the portlet."""
         return [IPythonScriptPortletItem(result) for result in results]
@@ -153,25 +161,21 @@ class PythonScriptPortletRenderer(base.Renderer):
         manager = IPythonScriptManager(portal)
         script_name = self.data.script_name
         try:
-            script = manager.getScript(script_name)
+            info = manager.getInfo(script_name)
         except KeyError:
             logger.exception(u'Could not find script %r' % script_name)
             return []
-        if not script.enabled:
+        if not info.enabled:
             logger.warning(u'Script %r is not enabled' % script_name)
             return []
+        script = manager.getScript(script_name)
         try:
-            executable = self.get_executable(script.code)
-        except SyntaxError:
-            logger.exception(u'Script %r could not be parsed' % script_name)
-            return []
-        try:
-            results = executable()
+            results = self.run_script(script)
         except Exception:
             logger.exception(u'Error while running script %r' % script_name)
             return []
         else:
-            logger.info(u'Code executed successfully')
+            logger.info(u'Script %r executed successfully' % script_name)
             limit = self.data.limit_results
             if limit:
                 results = results[:limit]

@@ -1,21 +1,22 @@
 from zope.interface import Interface, implements
 from zope.annotation.interfaces import IAnnotations
-from plone.app.content.namechooser import NormalizingNameChooser
-from zope.container.interfaces import INameChooser
-from zope.container import folder
-from collective.portlet.pythonscript.content.pythonscript import IPythonScript
-from zope.component._api import getUtility
-from plone.i18n.normalizer.interfaces import IURLNormalizer
-from plone.app.content.interfaces import INameFromTitle
+from BTrees import OOBTree
+import persistent
 
 class IPythonScriptManager(Interface):
     """Interface of PythonScript store and manager."""
 
-    def addScript(self, script):
-        """Adds new Python Script to store and returns ID of saved script."""
+    def rescanScripts(self):
+        """Reset information about scripts."""
+        
+    def enableScript(self, name):
+        """Enable given script."""
+    
+    def disableScript(self, name):
+        """Disable given script."""
 
-    def hasScript(self, name):
-        """Returns whether the manager has got a script of given name."""
+    def getInfo(self, name):
+        """Retrieve information about the script."""
 
     def getScript(self, name):
         """Retrieves script of given name from store."""
@@ -30,91 +31,94 @@ class IPythonScriptManager(Interface):
         Scripts are returned ordered by titles.
         """
 
-    def removeScript(self, name):
-        """Removes script of given name from store."""
+class ScriptInfo(persistent.Persistent):
+    
+    def __init__(self, title, enabled):
+        self.title = title
+        self.enabled = enabled
 
-class ScriptNameChooser(NormalizingNameChooser):
-    """Name chooser for Python Scripts."""
-
-    def chooseName(self, name, object):
-        if not name:
-            nameFromTitle = INameFromTitle(object, None)
-            if nameFromTitle is not None:
-                name = nameFromTitle.title
-            if not name:
-                name = object.__class__.__name__
-
-        if not isinstance(name, unicode):
-            name = unicode(name, 'utf-8')
-
-        name = getUtility(IURLNormalizer).normalize(name)
-
-        return self._findUniqueName(name, object)
-
-    def _getCheckId(self, object):
-        """Return a function that can act as the check_id script.
-        """
-        return lambda id_, required: self.context.hasScript(id_)
-
-class PythonScriptManager(folder.Folder):
+class PythonScriptManager(object):
     """Store and manager of Python Scripts."""
 
     implements(IPythonScriptManager)
 
-    def addScript(self, script):
-        """Adds new Python Script to store and returns ID of saved script."""
-        assert IPythonScript.providedBy(script)
-        name_chooser = INameChooser(self)
-        name = name_chooser.chooseName(None, script)
-        self[name] = script
-        return name
+    # Key under which the script manager will be stored in the PloneSite.
+    ANNOTATION_KEY = 'collective.portlet.pythonscript.manager'
 
-    def hasScript(self, name):
-        """Returns whether the manager has got a script of given name."""
-        return name in self and IPythonScript.providedBy(self[name])
+    PATH_SEPARATOR = '/'
 
+    def __init__(self, context):
+        """Intialize."""
+        self.context = context
+        annotations = IAnnotations(context)
+        # 'data' stores information about found scripts:
+        # data = {
+        #     '/PloneSite/scriptX': {'title': u'My Script', 'enabled': True},
+        #     '/PloneSite/checkId': {'title': u'Internal', 'enabled': False}
+        # }
+        self.data = annotations.setdefault(self.ANNOTATION_KEY, OOBTree.OOBTree())
+
+    def scanScripts(self, context):
+        for item in context.objectValues('Script (Python)'):
+            # TODO: recursion?
+            yield item
+
+    def rescanScripts(self):
+        """Reset information about scripts."""
+        data = self.data
+        # We need to keep information about enabled scripts.
+        enabled = {}
+        for path, info in data.iteritems():
+            if info.enabled:
+                enabled[path] = True
+        # Clear previous data.
+        data.clear()
+        # Now we scan for scripts.
+        for script in self.scanScripts(self.context):
+            # Convert path from tuple to dot-separated list.
+            path = self.PATH_SEPARATOR.join(script.getPhysicalPath())
+            # And save information about all found.
+            data[path] = ScriptInfo(script.title, path in enabled)
+    
+    def getInfo(self, name):
+        """Retrieve information about the script."""
+        info = self.data[name]
+        return info
+    
     def getScript(self, name):
         """Retrieves script of given name from store."""
-        script = self[name]
-        assert IPythonScript.providedBy(script)
+        assert name in self.data
+        script = self.context.unrestrictedTraverse(name)
         return script
+    
+    def enableScript(self, name):
+        """Enable given script."""
+        info = self.data[name]
+        info.enabled = True
 
-    def removeScript(self, name):
-        """Removes script of given name from store."""
-        script = self[name]
-        assert IPythonScript.providedBy(script)
-        del self[name]
-        return script
+    def disableScript(self, name):
+        """Disable given script."""
+        info = self.data[name]
+        info.enabled = False
 
     def getScripts(self):
         """Yields tuples of (scriptId, script) for all scripts in store.
         Scripts are returned ordered by titles.
         """
+        data = self.data
         by_title = []
-        for name in self:
-            script = self[name]
-            if not IPythonScript.providedBy(script):
-                continue
-            by_title.append((script.title, name))
+        for path, info in data.iteritems():
+            by_title.append((info.title, path))
         # Sort by titles.
         by_title.sort(key=lambda t: t[0])
-        for _title, name in by_title:
-            yield name, self[name]
+        for _title, path in by_title:
+            yield path, data[path]
 
     def getEnabledScripts(self):
         """Yield tuples of (scriptId, script) for all enabled scripts in store.
         Scripts are returned ordered by titles.
         """
-        for name, script in self.getScripts():
-            if not script.enabled:
+        for path, info in self.getScripts():
+            if not info.enabled:
                 continue
-            yield name, script
-
-# Key under which the script manager will be stored in the PloneSite.
-ANNOTATION_KEY = 'collective.portlet.pythonscript.manager'
-
-def pythonScriptManagerAdapter(ploneSite):
-    """Returns Python Script Manager for given Plone site."""
-    # Manager is stored in annotations.
-    annotations = IAnnotations(ploneSite)
-    return annotations.setdefault(ANNOTATION_KEY, PythonScriptManager())
+            yield path, info

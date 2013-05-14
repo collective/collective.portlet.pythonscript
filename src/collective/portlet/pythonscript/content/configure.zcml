@@ -6,20 +6,14 @@
   <adapter
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     provides=".scriptmanager.IPythonScriptManager"
-    factory=".scriptmanager.pythonScriptManagerAdapter"
+    factory=".scriptmanager.PythonScriptManager"
     />
 
-  <adapter
-    for=".scriptmanager.IPythonScriptManager"
-    factory=".scriptmanager.ScriptNameChooser"
-    provides="zope.container.interfaces.INameChooser"
+  <!-- vocabulary -->
+  <utility
+    provides="zope.schema.interfaces.IVocabularyFactory"
+    component=".vocab.PythonScriptsVocabFactory"
+    name="python-scripts"
     />
-   
-    <!-- vocabulary -->
-    <utility
-        provides="zope.schema.interfaces.IVocabularyFactory"
-        component=".vocab.PythonScriptsVocabFactory"
-        name="python-scripts"
-        />
 
 </configure>
