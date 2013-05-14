@@ -37,7 +37,7 @@ class IPythonScriptPortlet(IPortletDataProvider):
 
 class IPythonScriptPortletItem(Interface):
     """Interface for portlet items."""
-    
+
     url = Attribute('URL of the content item')
     title = Attribute('Title of the content item')
 
@@ -54,7 +54,7 @@ class CatalogBrainPythonScriptPortletAdapter(object):
     def title(self):
         """Get brain title."""
         return self.context.Title
-    
+
     @property
     def url(self):
         """Get brain url."""
@@ -63,19 +63,19 @@ class CatalogBrainPythonScriptPortletAdapter(object):
 class PythonScriptPortletAssignment(base.Assignment):
     """Assignment of Python Script portlet."""
     implements(IPythonScriptPortlet)
-    
+
     def __init__(self, portlet_title=u"", script_name=None, limit_results=None):
         self.portlet_title = portlet_title
         self.script_name = script_name
         self.limit_results = limit_results
-    
+
     @property
     def title(self):
         return _(u"Python Script ${portlet_title}", mapping={'portlet_title': self.portlet_title})
 
 class PythonScriptPortletAddForm(base.AddForm):
     """Python Script portlet add form."""
-    
+
     form_fields = form.Fields(IPythonScriptPortlet)
 
     label = _(u"Add Python Script Portlet")
@@ -90,7 +90,7 @@ class PythonScriptPortletAddForm(base.AddForm):
 
 class PythonScriptPortletEditForm(base.EditForm):
     """Python Script portlet edit form."""
-    
+
     form_fields = form.Fields(IPythonScriptPortlet)
 
     label = _(u"Edit Python Script Portlet")
@@ -98,13 +98,13 @@ class PythonScriptPortletEditForm(base.EditForm):
 
 class PythonScriptPortletRenderer(base.Renderer):
     """Python Script portlet renderer."""
-    
+
     template = ViewPageTemplateFile('portlet.pt')
-    
+
     def render(self):
         """Render portlet."""
         return self.template()
-    
+
     @property
     def portlet_title(self):
         """Returns portlet title."""
@@ -172,7 +172,7 @@ class PythonScriptPortletRenderer(base.Renderer):
             return []
         else:
             logger.info(u'Code executed successfully')
-            limit = self.data.limit_results 
+            limit = self.data.limit_results
             if limit:
                 results = results[:limit]
             return self.wrap_results(results)

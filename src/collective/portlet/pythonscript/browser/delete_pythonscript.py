@@ -36,4 +36,3 @@ class DeletePythonScriptForm(EditPythonScriptForm):
         super(DeletePythonScriptForm, self).updateActions()
         saveAction = self.actions["save"]
         saveAction.title = _(u'Delete')
-    

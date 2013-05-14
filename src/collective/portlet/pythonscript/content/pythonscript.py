@@ -7,7 +7,7 @@ from Products.CMFPlone import PloneMessageFactory as _
 
 class IPythonScript(Interface):
     """Interface for Python Script objects."""
-    
+
     title = TextLine(
         title=_(u"Script title"),
         description=u"",
@@ -29,9 +29,9 @@ class IPythonScript(Interface):
 
 class PythonScript(persistent.Persistent):
     """Python Script object."""
-    
+
     implements(IPythonScript, INameFromTitle)
-    
+
     # Default values of attributes.
     title = FieldProperty(IPythonScript['title'])
     enabled = FieldProperty(IPythonScript['enabled'])

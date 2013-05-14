@@ -30,7 +30,7 @@ class IPythonScriptManager(Interface):
 
 class ScriptNameChooser(NormalizingNameChooser):
     """Name chooser for Python Scripts."""
-    
+
     def chooseName(self, name, object):
         if not name:
             nameFromTitle = INameFromTitle(object, None)
@@ -38,14 +38,14 @@ class ScriptNameChooser(NormalizingNameChooser):
                 name = nameFromTitle.title
             if not name:
                 name = object.__class__.__name__
-  
+
         if not isinstance(name, unicode):
             name = unicode(name, 'utf-8')
-  
+
         name = getUtility(IURLNormalizer).normalize(name)
-  
+
         return self._findUniqueName(name, object)
-    
+
     def _getCheckId(self, object):
         """Return a function that can act as the check_id script.
         """
@@ -53,9 +53,9 @@ class ScriptNameChooser(NormalizingNameChooser):
 
 class PythonScriptManager(folder.Folder):
     """Store and manager of Python Scripts."""
-    
+
     implements(IPythonScriptManager)
-    
+
     def addScript(self, script):
         """Adds new Python Script to store and returns ID of saved script."""
         assert IPythonScript.providedBy(script)
@@ -73,7 +73,7 @@ class PythonScriptManager(folder.Folder):
         script = self[name]
         assert IPythonScript.providedBy(script)
         return script
-    
+
     def removeScript(self, name):
         """Removes script of given name from store."""
         script = self[name]

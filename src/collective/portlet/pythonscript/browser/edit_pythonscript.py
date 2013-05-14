@@ -39,7 +39,7 @@ class EditPythonScriptForm(form.SchemaEditForm):
         name = self.request.form['id']
         encoded = urllib.quote_plus(name.encode('utf-8'))
         return self.context.absolute_url() + '/@@edit_pythonscript?id=%s' % encoded
-    
+
     def __call__(self):
         """Default implementation would redirect to Plone Site view, but we
         want to show the Python Scripts management interface instead.
