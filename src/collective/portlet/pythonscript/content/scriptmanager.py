@@ -25,6 +25,11 @@ class IPythonScriptManager(Interface):
         Scripts are returned ordered by titles.
         """
 
+    def getEnabledScripts(self):
+        """Yield tuples of (scriptId, script) for all enabled scripts in store.
+        Scripts are returned ordered by titles.
+        """
+
     def removeScript(self, name):
         """Removes script of given name from store."""
 
@@ -95,6 +100,15 @@ class PythonScriptManager(folder.Folder):
         by_title.sort(key=lambda t: t[0])
         for _title, name in by_title:
             yield name, self[name]
+
+    def getEnabledScripts(self):
+        """Yield tuples of (scriptId, script) for all enabled scripts in store.
+        Scripts are returned ordered by titles.
+        """
+        for name, script in self.getScripts():
+            if not script.enabled:
+                continue
+            yield name, script
 
 # Key under which the script manager will be stored in the PloneSite.
 ANNOTATION_KEY = 'collective.portlet.pythonscript.manager'
