@@ -5,6 +5,7 @@ from Products.PythonScripts.PythonScript import PythonScript
 
 from collective.portlet.pythonscript.testing import\
     COLLECTIVE_PORTLET_PYTHONSCRIPT_INTEGRATION
+from collective.portlet.pythonscript.content.scriptmanager import IPythonScriptManager
 
 class TestBase(unittest.TestCase):
     """Base test case."""
@@ -18,16 +19,20 @@ class TestBase(unittest.TestCase):
         self.qi_tool = getToolByName(self.portal, 'portal_quickinstaller')
         self.ploneSite = self.app.plone
 
-    def createPythonScript(self, title, code):
+    def createPythonScript(self, id_, title, code):
         """Creare new Python Script object."""
-        ps = PythonScript('ps')
+        ps = PythonScript(id_)
         ps.ZPythonScript_setTitle(title)
         ps.write(code)
         ps._makeFunction()
         return ps
 
-    def addPS(self, id_, title, code):
+    def addPythonScript(self, id_, title, code):
         """Add new Python Script to Plone Site."""
-        ps = self.createPythonScript(title, code)
-        self.ploneSite._setOb(id_, ps)
+        ps = self.createPythonScript(id_, title, code)
+        self.ploneSite[id_] = ps
         return ps
+    
+    def getScriptManager(self):
+        """Return script manager for Plone site."""
+        return IPythonScriptManager(self.ploneSite)
