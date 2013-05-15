@@ -76,6 +76,7 @@ class PythonScriptManager(object):
     # Key under which the script manager will be stored in the PloneSite.
     ANNOTATION_KEY = 'collective.portlet.pythonscript.manager'
 
+    # ZODB path separator.
     PATH_SEPARATOR = '/'
 
     def __init__(self, context):
@@ -84,15 +85,17 @@ class PythonScriptManager(object):
         annotations = IAnnotations(context)
         # 'data' stores information about found scripts:
         # data = {
-        #     '/PloneSite/scriptX': {'title': u'My Script', 'enabled': True},
-        #     '/PloneSite/checkId': {'title': u'Internal', 'enabled': False}
+        #     '/PloneSite/scriptX': ScriptInfo(u'My Script'),
+        #     '/PloneSite/checkId': ScriptInfo(u'Internal')
         # }
         self.data = annotations.setdefault(self.ANNOTATION_KEY, OOBTree.OOBTree())
 
     def scanScripts(self, context):
+        """Find scripts in given context."""
         for item in context.objectValues('Script (Python)'):
-            # TODO: recursion?
             yield item
+        # For now only scripts from the top-level Plone site will be found.
+        # Maybe in the future we should also find scripts recursively (expensive).
 
     def rescanScripts(self):
         """Reset information about scripts."""
@@ -110,9 +113,11 @@ class PythonScriptManager(object):
             path = self.PATH_SEPARATOR.join(script.getPhysicalPath())
             # And save information about all found.
             if path in enabled:
-                data[path] = enabled[path]
+                info = enabled[path]
+                info.title = script.title # Updated cached script title.
             else:
-                data[path] = ScriptInfo(script.title)
+                info = ScriptInfo(script.title)
+            data[path] = info
 
     def getInfo(self, name):
         """Retrieve information about the script."""
@@ -138,11 +143,16 @@ class PythonScriptManager(object):
         info.times = None
 
     def enableTiming(self, name):
+        """Enable gathering execution times."""
         info = self.data[name]
         info.timing = True
         info.times = PersistentList()
 
     def disableTiming(self, name):
+        """Disable gathering execution times.
+
+        Also resets any stored execution times.
+        """
         info = self.data[name]
         info.timing = False
         info.times = None

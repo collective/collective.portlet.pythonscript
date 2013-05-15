@@ -8,6 +8,8 @@ def PythonScriptsVocabFactory(context):
     portal_url = getToolByName(context, 'portal_url')
     portal = portal_url.getPortalObject()
     manager = IPythonScriptManager(portal)
-    terms = [SimpleVocabulary.createTerm(name, name, script.title or _(u'<unnamed>'))
-             for (name, script) in manager.getEnabledScripts()]
+    terms = [
+        SimpleVocabulary.createTerm(name, name, script.title or _(u'<unnamed>'))
+        for (name, script) in manager.getEnabledScripts()
+    ]
     return SimpleVocabulary(terms)

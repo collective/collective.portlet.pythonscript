@@ -83,6 +83,7 @@ class PythonScriptPortletAddForm(base.AddForm):
     description = _(u"This portlet displays list of catalog objects returned by assigned Python Script")
 
     def create(self, data):
+        """Create portlet assignment."""
         return PythonScriptPortletAssignment(
             portlet_title=data['portlet_title'],
             script_name=data['script_name'],
@@ -148,7 +149,8 @@ class PythonScriptPortletRenderer(base.Renderer):
         else:
             timing = time() - before
             logger.info(u'Script %r executed successfully in %.3f sec' % (script_name, timing))
-            info.addTiming(timing)
+            if info.timing:
+                info.addTiming(timing)
             limit = self.data.limit_results
             if limit:
                 results = results[:limit]
