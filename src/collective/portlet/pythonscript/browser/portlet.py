@@ -111,37 +111,6 @@ class PythonScriptPortletRenderer(base.Renderer):
         """Returns portlet title."""
         return self.data.portlet_title
 
-    def get_globals(self):
-        """Get a dictionary of globals exposed to the script."""
-        portal_catalog = getToolByName(self.context, 'portal_catalog')
-        globals = {
-            'context': self.context,
-            'request': self.request,
-            'portal_catalog': portal_catalog
-        }
-        return globals
-
-    def get_executable(self, code):
-        """Parse code and return it as executable function."""
-        assert isinstance(code, unicode)
-        runnable = [
-            u"# -*- coding: utf-8 -*-", # Code can contain unicode characters.
-            u"def wrapper():", # We add a wrapper around code, to support 'return outside function'.
-            u'    """Wrapper for Python Script"""'
-        ]
-        for line in code.split('\n'):
-            # Pad lines so they are inside 'wrapper' function.
-            runnable.append(u"    %s" % line)
-        # Join and encode to string.
-        executable = u'\n'.join(runnable).encode('utf-8')
-        globals = self.get_globals()
-        locals = {}
-        # Execcuting the code should create the wrapper function or raise SyntaxError.
-        exec executable in globals, locals
-        # Wrapper should be added to local variables.
-        function = locals['wrapper']
-        return function
-
     def run_script(self, script):
         """Execute Python Script."""
         # Change the context of the script to point to current portlet context.
