@@ -11,7 +11,7 @@
   <include package=".content" />
 
   <genericsetup:registerProfile
-      name="PythonScript Portlet"
+      name="default"
       title="collective.portlet.pythonscript"
       directory="profiles/default"
       description="Installs the collective.portlet.pythonscript package"

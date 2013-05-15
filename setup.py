@@ -42,7 +42,7 @@ setup(name='collective.portlet.pythonscript',
           'setuptools',
           # -*- Extra requirements: -*-
           'Plone',
-          'plone.directives.form'
+          'plone.app.testing'
       ],
       extras_require={'test': ['plone.app.testing']},
       entry_points="""
