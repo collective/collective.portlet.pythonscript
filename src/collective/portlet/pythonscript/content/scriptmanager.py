@@ -2,6 +2,7 @@ from zope.interface import Interface, implements
 from zope.annotation.interfaces import IAnnotations
 from BTrees import OOBTree
 import persistent
+from persistent.list import PersistentList
 
 class IPythonScriptManager(Interface):
     """Interface of PythonScript store and manager."""
@@ -32,10 +33,40 @@ class IPythonScriptManager(Interface):
         """
 
 class ScriptInfo(persistent.Persistent):
+    """Meta-information about a Python Script."""
     
-    def __init__(self, title, enabled):
+    title = u""
+    enabled = False
+    timing = False
+    times = None
+    
+    def __init__(self, title, enabled=False, timing=False):
         self.title = title
         self.enabled = enabled
+        self.timing = timing
+        self.times = None
+    
+    def addTiming(self, seconds):
+        assert self.timing
+        self.times.append(seconds)
+    
+    def getTiming(self):
+        assert self.timing
+        times = self.times
+        if not len(times):
+            return {
+                'min_time': 0.0,
+                'max_time': 0.0,
+                'avg_time': 0.0,
+                'samples': 0
+            }
+        else:
+            return {
+                'min_time': min(times),
+                'max_time': max(times),
+                'avg_time': sum(times) / len(times),
+                'samples': len(times)
+            }
 
 class PythonScriptManager(object):
     """Store and manager of Python Scripts."""
@@ -70,7 +101,7 @@ class PythonScriptManager(object):
         enabled = {}
         for path, info in data.iteritems():
             if info.enabled:
-                enabled[path] = True
+                enabled[path] = info
         # Clear previous data.
         data.clear()
         # Now we scan for scripts.
@@ -78,7 +109,10 @@ class PythonScriptManager(object):
             # Convert path from tuple to dot-separated list.
             path = self.PATH_SEPARATOR.join(script.getPhysicalPath())
             # And save information about all found.
-            data[path] = ScriptInfo(script.title, path in enabled)
+            if path in enabled:
+                data[path] = enabled[path]
+            else:
+                data[path] = ScriptInfo(script.title)
     
     def getInfo(self, name):
         """Retrieve information about the script."""
@@ -100,6 +134,18 @@ class PythonScriptManager(object):
         """Disable given script."""
         info = self.data[name]
         info.enabled = False
+        info.timing = False
+        info.times = None
+    
+    def enableTiming(self, name):
+        info = self.data[name]
+        info.timing = True
+        info.times = PersistentList()
+    
+    def disableTiming(self, name):
+        info = self.data[name]
+        info.timing = False
+        info.times = None
 
     def getScripts(self):
         """Yields tuples of (scriptId, script) for all scripts in store.

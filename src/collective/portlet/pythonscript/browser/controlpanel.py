@@ -7,9 +7,13 @@ class PythonScriptControlPanel(BrowserView):
     def getScripts(self):
         """Return list of available scripts descriptions."""
         manager = IPythonScriptManager(self.context)
-        for path, script in manager.getScripts():
-            yield {
+        for path, info in manager.getScripts():
+            data = {
                 'path': path,
-                'title': script.title,
-                'enabled': script.enabled
+                'title': info.title,
+                'enabled': info.enabled,
+                'timing': info.timing
             }
+            if info.timing:
+                data.update(info.getTiming())
+            yield data

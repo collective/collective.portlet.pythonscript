@@ -50,6 +50,20 @@
         class=".edit_pythonscript.DisablePythonScriptView"
         permission="cmf.ManagePortal"
         />
+    
+    <browser:page
+        name="enabletiming_pythonscript"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".edit_pythonscript.EnableTimingPythonScriptView"
+        permission="cmf.ManagePortal"
+        />
+
+    <browser:page
+        name="disabletiming_pythonscript"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".edit_pythonscript.DisableTimingPythonScriptView"
+        permission="cmf.ManagePortal"
+        />
 
     <!-- portlet -->
     <plone:portlet

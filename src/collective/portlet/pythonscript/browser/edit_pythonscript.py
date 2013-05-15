@@ -30,3 +30,19 @@ class DisablePythonScriptView(EnablePythonScriptView):
         """Disable script and return portal message."""
         manager.disableScript(id)
         return _(u'Script disabled')
+
+class EnableTimingPythonScriptView(EnablePythonScriptView):
+    """View for enabling timing of Python Script."""
+
+    def performAction(self, manager, id):
+        """Enable timing and return portal message."""
+        manager.enableTiming(id)
+        return _(u'Timing enabled')
+
+class DisableTimingPythonScriptView(EnablePythonScriptView):
+    """View for disabling timing of Python Script."""
+
+    def performAction(self, manager, id):
+        """Disable timing and return portal message."""
+        manager.disableTiming(id)
+        return _(u'Timing disabled')

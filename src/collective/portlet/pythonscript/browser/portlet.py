@@ -1,4 +1,5 @@
 import logging
+from time import time
 
 from plone.portlets.interfaces import IPortletDataProvider
 from Products.CMFPlone import PloneMessageFactory as _
@@ -169,13 +170,16 @@ class PythonScriptPortletRenderer(base.Renderer):
             logger.warning(u'Script %r is not enabled' % script_name)
             return []
         script = manager.getScript(script_name)
+        before = time()
         try:
             results = self.run_script(script)
         except Exception:
             logger.exception(u'Error while running script %r' % script_name)
             return []
         else:
-            logger.info(u'Script %r executed successfully' % script_name)
+            timing = time() - before
+            logger.info(u'Script %r executed successfully in %.3f sec' % (script_name, timing))
+            info.addTiming(timing)
             limit = self.data.limit_results
             if limit:
                 results = results[:limit]
