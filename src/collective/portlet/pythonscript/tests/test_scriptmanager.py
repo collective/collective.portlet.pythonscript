@@ -63,11 +63,18 @@ class TestScriptManager(TestBase):
         self.assertEqual(script, ps)
 
     def testMoreScripts(self):
+        """Test adding more scripts."""
         first = self.testSingleScript()
         second = self.addPythonScript('second', None, 'return []')
         third = self.addPythonScript('third', u'A Third Script', 'return []')
         
+        # Scripts are not visible until rescan.
         manager = self.getScriptManager()
+        scripts = manager.getScripts()
+        name, info = scripts.next()
+        self.assertEqual(name, '/plone/first')
+        self.assertRaises(StopIteration, scripts.next)
+        
         manager.rescanScripts()
         scripts = manager.getScripts()
         # Scripts should be ordered by title.
@@ -79,4 +86,19 @@ class TestScriptManager(TestBase):
         self.assertEqual(name, '/plone/second')
         self.assertRaises(StopIteration, scripts.next)
         
+        enabled = manager.getEnabledScripts()
+        self.assertRaises(StopIteration, enabled.next)
+        
         return [first, second, third]
+    
+    def testEnableScript(self):
+        """Test enabling script."""
+        self.testMoreScripts()
+        
+        manager = self.getScriptManager()
+        manager.enableScript('/plone/third')
+        
+        enabled = manager.getEnabledScripts()
+        name, info = enabled.next()
+        self.assertEqual(name, '/plone/third')
+        self.assertRaises(StopIteration, enabled.next)
