@@ -9,10 +9,10 @@ class IPythonScriptManager(Interface):
 
     def rescanScripts(self):
         """Reset information about scripts."""
-        
+
     def enableScript(self, name):
         """Enable given script."""
-    
+
     def disableScript(self, name):
         """Disable given script."""
 
@@ -34,22 +34,22 @@ class IPythonScriptManager(Interface):
 
 class ScriptInfo(persistent.Persistent):
     """Meta-information about a Python Script."""
-    
+
     title = u""
     enabled = False
     timing = False
     times = None
-    
+
     def __init__(self, title, enabled=False, timing=False):
         self.title = title
         self.enabled = enabled
         self.timing = timing
         self.times = None
-    
+
     def addTiming(self, seconds):
         assert self.timing
         self.times.append(seconds)
-    
+
     def getTiming(self):
         assert self.timing
         times = self.times
@@ -113,18 +113,18 @@ class PythonScriptManager(object):
                 data[path] = enabled[path]
             else:
                 data[path] = ScriptInfo(script.title)
-    
+
     def getInfo(self, name):
         """Retrieve information about the script."""
         info = self.data[name]
         return info
-    
+
     def getScript(self, name):
         """Retrieves script of given name from store."""
         assert name in self.data
         script = self.context.unrestrictedTraverse(name)
         return script
-    
+
     def enableScript(self, name):
         """Enable given script."""
         info = self.data[name]
@@ -136,12 +136,12 @@ class PythonScriptManager(object):
         info.enabled = False
         info.timing = False
         info.times = None
-    
+
     def enableTiming(self, name):
         info = self.data[name]
         info.timing = True
         info.times = PersistentList()
-    
+
     def disableTiming(self, name):
         info = self.data[name]
         info.timing = False

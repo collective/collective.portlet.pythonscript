@@ -11,7 +11,7 @@ class RescanPythonScriptView(BrowserView):
         # Check against CSRF.
         CheckAuthenticator(self.request)
         PostOnly(self.request)
-        
+
         manager = IPythonScriptManager(self.context)
         manager.rescanScripts()
         IStatusMessage(self.request).addStatusMessage(_(u'Rescanned'))
