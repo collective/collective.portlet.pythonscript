@@ -22,15 +22,12 @@ class TestScriptManager(TestBase):
     
     def testSingleScript(self):
         """Test if after rescanning a single script is find."""
-        self.addPythonScript('first', u'First', 'return []')
-        manager = self.getScriptManager()
+        ps = self.addPythonScript('first', u'First', 'return []')
         
         # Script should not be visible until rescan.
-        scripts = manager.getScripts()
-        self.assertRaises(StopIteration, scripts.next)
-        enabled = manager.getEnabledScripts()
-        self.assertRaises(StopIteration, enabled.next)
+        self.testEmpty()
         
+        manager = self.getScriptManager()
         # After rescan script should be visible...
         manager.rescanScripts()
         scripts = manager.getScripts()
@@ -44,3 +41,22 @@ class TestScriptManager(TestBase):
         # ...but inactive.
         enabled = manager.getEnabledScripts()
         self.assertRaises(StopIteration, enabled.next)
+        return ps
+    
+    def testGetInfoSingleScript(self):
+        self.testSingleScript()
+        manager = self.getScriptManager()
+        self.assertRaises(KeyError, manager.getInfo, '/plone/nonexisting')
+        info = manager.getInfo('/plone/first')
+        self.assertEqual(info.title, u'First')
+        self.assertEqual(info.enabled, False)
+        self.assertEqual(info.timing, False)
+        self.assertEqual(info.times, None)
+    
+    def testGetScript(self):
+        ps = self.testSingleScript()
+        manager = self.getScriptManager()
+        self.assertRaises(AssertionError, manager.getScript, '/plone/nonexisting')
+        script = manager.getScript('/plone/first')
+        self.assertEqual(script, ps)
+
