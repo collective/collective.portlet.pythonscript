@@ -44,6 +44,7 @@ class TestScriptManager(TestBase):
         return ps
     
     def testGetInfoSingleScript(self):
+        """Test retrieving script metadata."""
         self.testSingleScript()
         manager = self.getScriptManager()
         self.assertRaises(KeyError, manager.getInfo, '/plone/nonexisting')
@@ -53,10 +54,29 @@ class TestScriptManager(TestBase):
         self.assertEqual(info.timing, False)
         self.assertEqual(info.times, None)
     
-    def testGetScript(self):
+    def testGetScriptSingleScript(self):
+        """Test retrieving script."""
         ps = self.testSingleScript()
         manager = self.getScriptManager()
         self.assertRaises(AssertionError, manager.getScript, '/plone/nonexisting')
         script = manager.getScript('/plone/first')
         self.assertEqual(script, ps)
 
+    def testMoreScripts(self):
+        first = self.testSingleScript()
+        second = self.addPythonScript('second', None, 'return []')
+        third = self.addPythonScript('third', u'A Third Script', 'return []')
+        
+        manager = self.getScriptManager()
+        manager.rescanScripts()
+        scripts = manager.getScripts()
+        # Scripts should be ordered by title.
+        name, info = scripts.next()
+        self.assertEqual(name, '/plone/third')
+        name, info = scripts.next()
+        self.assertEqual(name, '/plone/first')
+        name, info = scripts.next()
+        self.assertEqual(name, '/plone/second')
+        self.assertRaises(StopIteration, scripts.next)
+        
+        return [first, second, third]
