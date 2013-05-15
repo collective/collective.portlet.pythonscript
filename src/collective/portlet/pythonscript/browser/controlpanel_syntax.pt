@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xml:lang="en" lang="en"
+      metal:use-macro="context/prefs_main_template/macros/master"
+      i18n:domain="plone">
+
+<body>
+
+<metal:main fill-slot="prefs_configlet_main">
+
+    <h1 class="documentFirstHeading" i18n:translate="">
+        Check syntax of Python Scripts
+    </h1>
+
+    <div class="documentDescription" i18n:translate="">
+        Check syntax of Python Script that can be used by Python Script portlets.
+    </div>
+    
+    <div id="content-core">
+
+        <a href=""
+           class="link-parent"
+           tal:attributes="href string:$portal_url/plone_control_panel"
+           i18n:translate="label_up_to_plone_setup">
+            Up to Site Setup
+        </a>
+        
+        <div id="script-list">
+            <table class="listing nosort">
+                <thead>
+                    <tr>
+                        <th i18n:translate="">Title</th>
+                        <th i18n:translate="">Path</th>
+                        <th i18n:translate="" class="listingCheckbox">Enabled</th>
+                        <th i18n:translate="">Syntax Errors</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tal:loop repeat="script view/getScripts">
+                    <tr tal:define="oddrow repeat/script/odd"
+                        class="odd"
+                        tal:attributes="class python:oddrow and 'odd' or 'even'"> 
+	                        <td tal:content="script/title">Title</td>
+	                        <td tal:content="script/path">/PloneSite/myscript</td>
+	                        <td class="listingCheckbox">
+	                           <tal:tag condition="script/enabled" i18n:translate="">Yes</tal:tag>
+	                           <tal:tag condition="not: script/enabled" i18n:translate="">No</tal:tag>
+	                        </td>
+	                        <td>
+	                           <ul>
+		                           <tal:loop repeat="error script/errors">
+		                               <li class="error" tal:content="error">Error description</li>
+		                           </tal:loop>
+	                           </ul>
+	                        </td>
+                    </tr>
+                    </tal:loop>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="script-actions">
+            <form action="#" method="get"
+                  tal:attributes="action string:${portal_url}/@@manage_pythonscript">
+                <input type="submit" name="button" value="Manage scripts" i18n:attributes="value">
+            </form>
+        </div>
+
+    </div>
+
+</metal:main>
+</body>
+</html>

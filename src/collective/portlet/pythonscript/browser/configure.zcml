@@ -20,6 +20,15 @@
         permission="cmf.ManagePortal"
         template="controlpanel.pt"
         />
+    
+    <!-- control panel -->
+    <browser:page
+        name="checksyntax_pythonscript"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".checksyntax_pythonscript.CheckSyntaxPythonScriptView"
+        permission="cmf.ManagePortal"
+        template="controlpanel_syntax.pt"
+        />
 
     <browser:page
         name="rescan_pythonscript"
