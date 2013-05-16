@@ -3,10 +3,18 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="collective.portlet.pythonscript">
 
+  <!-- script manager -->
   <adapter
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     provides=".interface.IPythonScriptManager"
     factory=".scriptmanager.PythonScriptManager"
+    />
+
+  <!-- rendering portlet items -->
+  <adapter
+    for="Products.ZCatalog.interfaces.ICatalogBrain"
+    provides=".interface.IPythonScriptPortletItem"
+    factory=".brains.CatalogBrainPythonScriptPortletAdapter"
     />
 
   <!-- vocabulary -->

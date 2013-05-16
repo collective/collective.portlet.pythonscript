@@ -75,10 +75,4 @@
         editview=".portlet.PythonScriptPortletEditForm"
         />
 
-    <adapter
-        for="Products.ZCatalog.interfaces.ICatalogBrain"
-        provides=".portlet.IPythonScriptPortletItem"
-        factory=".portlet.CatalogBrainPythonScriptPortletAdapter"
-        />
-
 </configure>

@@ -5,11 +5,12 @@ from plone.portlets.interfaces import IPortletDataProvider
 from Products.CMFPlone import PloneMessageFactory as _
 from zope import schema
 from zope.formlib import form
-from zope.interface import implements, Interface, Attribute
+from zope.interface import implements
 from plone.app.portlets.portlets import base
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
-from collective.portlet.pythonscript.content.interface import IPythonScriptManager
+from collective.portlet.pythonscript.content.interface import IPythonScriptManager,\
+    IPythonScriptPortletItem
 
 logger = logging.getLogger(__name__)
 
@@ -35,31 +36,6 @@ class IPythonScriptPortlet(IPortletDataProvider):
         required=False,
         min=1
     )
-
-class IPythonScriptPortletItem(Interface):
-    """Interface for portlet items."""
-
-    url = Attribute('URL of the content item')
-    title = Attribute('Title of the content item')
-
-class CatalogBrainPythonScriptPortletAdapter(object):
-    """Adapter for portal catalog brains into renderable portlet items."""
-
-    implements(IPythonScriptPortletItem)
-
-    def __init__(self, context):
-        """Context is Products.ZCatalog.interfaces.ICatalogBrain"""
-        self.context = context
-
-    @property
-    def title(self):
-        """Get brain title."""
-        return self.context.Title
-
-    @property
-    def url(self):
-        """Get brain url."""
-        return self.context.getURL()
 
 class PythonScriptPortletAssignment(base.Assignment):
     """Assignment of Python Script portlet."""

@@ -57,3 +57,9 @@ class IScriptInfo(Interface):
             'samples': number of timing samples gathered
         }
         """
+
+class IPythonScriptPortletItem(Interface):
+    """Interface for portlet items."""
+
+    url = Attribute('URL of the content item')
+    title = Attribute('Title of the content item')
