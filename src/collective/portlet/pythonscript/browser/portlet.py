@@ -9,7 +9,7 @@ from zope.interface import implements, Interface, Attribute
 from plone.app.portlets.portlets import base
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
-from collective.portlet.pythonscript.content.scriptmanager import IPythonScriptManager
+from collective.portlet.pythonscript.content.interface import IPythonScriptManager
 
 logger = logging.getLogger(__name__)
 

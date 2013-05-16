@@ -1,4 +1,4 @@
-from collective.portlet.pythonscript.content.scriptmanager import IPythonScriptManager
+from collective.portlet.pythonscript.content.interface import IPythonScriptManager
 from plone.protect import CheckAuthenticator, PostOnly
 from collective.portlet.pythonscript.browser.controlpanel import PythonScriptControlPanel
 

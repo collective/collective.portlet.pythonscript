@@ -1,5 +1,5 @@
 from Products.Five import BrowserView
-from collective.portlet.pythonscript.content.scriptmanager import IPythonScriptManager
+from collective.portlet.pythonscript.content.interface import IPythonScriptManager
 
 class PythonScriptControlPanel(BrowserView):
     """Form for managing Python Scripts TTW."""

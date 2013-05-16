@@ -1,39 +1,15 @@
-from zope.interface import Interface, implements
+from zope.interface import implements
 from zope.annotation.interfaces import IAnnotations
 from BTrees import OOBTree
 import persistent
 from persistent.list import PersistentList
 
-class IPythonScriptManager(Interface):
-    """Interface of PythonScript store and manager."""
-
-    def rescanScripts(self):
-        """Reset information about scripts."""
-
-    def enableScript(self, name):
-        """Enable given script."""
-
-    def disableScript(self, name):
-        """Disable given script."""
-
-    def getInfo(self, name):
-        """Retrieve information about the script."""
-
-    def getScript(self, name):
-        """Retrieves script of given name from store."""
-
-    def getScripts(self):
-        """Yields tuples of (scriptId, script) for all scripts in store.
-        Scripts are returned ordered by titles.
-        """
-
-    def getEnabledScripts(self):
-        """Yield tuples of (scriptId, script) for all enabled scripts in store.
-        Scripts are returned ordered by titles.
-        """
+from collective.portlet.pythonscript.content.interface import IScriptInfo, IPythonScriptManager
 
 class ScriptInfo(persistent.Persistent):
     """Meta-information about a Python Script."""
+
+    implements(IScriptInfo)
 
     title = u""
     enabled = False
@@ -41,17 +17,24 @@ class ScriptInfo(persistent.Persistent):
     times = None
 
     def __init__(self, title, enabled=False, timing=False):
+        """Intialize."""
         self.title = title
         self.enabled = enabled
         self.timing = timing
         self.times = None
 
     def addTiming(self, seconds):
-        assert self.timing
+        """Store execution time of a script.
+
+        Parameter must be a float with number of seconds.
+        """
+        assert self.timing, u'Timing must be turned on to add timing data'
+        assert isinstance(seconds, float), u'Time must be float number of seconds'
         self.times.append(seconds)
 
     def getTiming(self):
-        assert self.timing
+        """Calculate executing time summaries."""
+        assert self.timing, u'Timing must be turned on to get timing data'
         times = self.times
         if not len(times):
             return {
@@ -69,7 +52,10 @@ class ScriptInfo(persistent.Persistent):
             }
 
 class PythonScriptManager(object):
-    """Store and manager of Python Scripts."""
+    """Store and manager of Python Scripts.
+    
+    Keeps data in annotations on context object (Plone site).
+    """
 
     implements(IPythonScriptManager)
 
@@ -126,7 +112,8 @@ class PythonScriptManager(object):
 
     def getScript(self, name):
         """Retrieves script of given name from store."""
-        assert name in self.data
+        if name not in self.data:
+            raise KeyError(name)
         script = self.context.unrestrictedTraverse(name)
         return script
 

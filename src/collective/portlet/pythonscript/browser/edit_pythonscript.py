@@ -1,6 +1,6 @@
 from Products.CMFPlone import PloneMessageFactory as _
 from Products.Five.browser import BrowserView
-from collective.portlet.pythonscript.content.scriptmanager import IPythonScriptManager
+from collective.portlet.pythonscript.content.interface import IPythonScriptManager
 from Products.statusmessages.interfaces import IStatusMessage
 from plone.protect import CheckAuthenticator, PostOnly
 

@@ -5,7 +5,7 @@
 
   <adapter
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    provides=".scriptmanager.IPythonScriptManager"
+    provides=".interface.IPythonScriptManager"
     factory=".scriptmanager.PythonScriptManager"
     />
 

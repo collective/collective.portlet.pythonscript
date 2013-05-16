@@ -3,9 +3,8 @@ import unittest2 as unittest
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 
-from collective.portlet.pythonscript.testing import\
-    COLLECTIVE_PORTLET_PYTHONSCRIPT_INTEGRATION
-from collective.portlet.pythonscript.content.scriptmanager import IPythonScriptManager
+from collective.portlet.pythonscript.testing import COLLECTIVE_PORTLET_PYTHONSCRIPT_INTEGRATION
+from collective.portlet.pythonscript.content.interface import IPythonScriptManager
 
 class TestBase(unittest.TestCase):
     """Base test case."""

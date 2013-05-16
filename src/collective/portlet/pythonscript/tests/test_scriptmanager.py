@@ -58,7 +58,7 @@ class TestScriptManager(TestBase):
         """Test retrieving script."""
         ps = self.testSingleScript()
         manager = self.getScriptManager()
-        self.assertRaises(AssertionError, manager.getScript, '/plone/nonexisting')
+        self.assertRaises(KeyError, manager.getScript, '/plone/nonexisting')
         script = manager.getScript('/plone/first')
         self.assertEqual(script, ps)
 
@@ -120,7 +120,7 @@ class TestScriptManager(TestBase):
         self.testEnabledMoreScripts()
 
         manager = self.getScriptManager()
-        self.assertRaises(AssertionError, manager.disableScript, '/plone/nonexisting')
+        self.assertRaises(KeyError, manager.disableScript, '/plone/nonexisting')
 
         manager.disableScript('/plone/third')
 
