@@ -5,14 +5,14 @@ from collective.portlet.pythonscript.tests.test_scriptmanager import TestScriptM
 
 class TestVocabulary(TestScriptManager):
     """Test enabled scripts vocabulary."""
-    
+
     def assertVocabulary(self, expectedTokens):
         """Check if vocabulary returns expected tokens."""
         factory = getUtility(IVocabularyFactory, 'python-scripts')
         vocabulary = factory(self.ploneSite)
         tokens = [term.token for term in vocabulary]
         self.assertEqual(tokens, expectedTokens)
-    
+
     def testEmpty(self):
         """Test if by default no scripts are listed."""
         result = super(TestVocabulary, self).testEmpty()

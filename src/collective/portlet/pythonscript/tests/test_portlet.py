@@ -11,9 +11,9 @@ from collective.portlet.pythonscript.content.interface import IPythonScriptManag
 
 class TestPortlet(TestBase):
     """Test script portlet."""
-    
+
     PORTLET_NAME = 'collective.portlet.PythonScript'
-    
+
     def setUp(self):
         """Login as manager."""
         super(TestPortlet, self).setUp()
@@ -38,7 +38,7 @@ return portal_catalog()""")
         subfolder.invokeFactory("Document", "doc")
         doc = subfolder.doc
         doc.setTitle(u'Document')
-    
+
     def tearDown(self):
         """Logout."""
         super(TestPortlet, self).tearDown()
@@ -90,9 +90,9 @@ return portal_catalog()""")
 
         self.failUnless(renderer.available,
             "Renderer should be available by default.")
-        
+
         self.assertEqual(renderer.portlet_title, u'My Portlet')
-        
+
         return renderer
 
     def testRendered(self):
@@ -103,7 +103,7 @@ return portal_catalog()""")
         self.assertTrue(u'<a href="http://nohost/plone/folder" class="tile">' in html)
         self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder" class="tile">' in html)
         self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder/doc" class="tile">' in html)
-    
+
     def testRenderedLimitedResults(self):
         """Test rendered content with limiting results."""
         renderer = self.testRenderer(limit_results=2)
