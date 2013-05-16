@@ -76,3 +76,13 @@ class TestPortlet(TestBase):
 
         self.failUnless(renderer.available,
             "Renderer should be available by default.")
+        
+        return renderer
+
+    def testRendered(self):
+        renderer = self.testRenderer()
+        self.assertEqual(renderer.portlet_title, u'My Portlet')
+        manager = self.getScriptManager()
+        script = manager.getScript('/plone/third')
+        result = renderer.run_script(script)
+        self.assertEqual(result, [])
