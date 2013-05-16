@@ -130,22 +130,22 @@ class TestScriptManager(TestBase):
         name, _info = enabled.next()
         self.assertEqual(name ,'/plone/first')
         self.assertRaises(StopIteration, enabled.next)
-        
+
     def testEnableTiming(self):
         """Test enable timing."""
         self.testEnableMoreScripts()
-        
+
         manager = self.getScriptManager()
         info = manager.getInfo('/plone/third')
-        
+
         # Cannot get or add timing when timing was not enabled.
         self.assertRaises(AssertionError, info.getTiming)
         self.assertRaises(AssertionError, info.addTiming, 0.3)
-        
+
         # Error is raised when unknown script is tried.
         self.assertRaises(KeyError, manager.enableTiming, '/plone/nonexisting')
         manager.enableTiming('/plone/third')
-        
+
         self.assertEqual(info.getTiming(), {
             'min_time': 0.0,
             'avg_time': 0.0,
@@ -162,20 +162,20 @@ class TestScriptManager(TestBase):
             'max_time': 0.4,
             'samples': 4
         })
-    
+
     def testDisableTiming(self):
         """Test disable timing."""
         self.testEnableTiming()
-        
+
         manager = self.getScriptManager()
         self.assertRaises(KeyError, manager.disableTiming, '/plone/nonexisting')
-        
+
         manager.disableTiming('/plone/third')
         info = manager.getInfo('/plone/third')
         # Cannot get or add timing when timing was not enabled.
         self.assertRaises(AssertionError, info.getTiming)
         self.assertRaises(AssertionError, info.addTiming, 0.3)
-        
+
         # After re-enabling timing timing data should be reset.
         manager.enableTiming('/plone/third')
         self.assertEqual(info.getTiming(), {
@@ -184,26 +184,26 @@ class TestScriptManager(TestBase):
             'max_time': 0.0,
             'samples': 0
         })
-        
+
     def testDisableScriptTiming(self):
         """Test if timing data is reset when script is disabled."""
         self.testEnableTiming()
-        
+
         manager = self.getScriptManager()
         manager.disableScript('/plone/third')
-        
+
         info = manager.getInfo('/plone/third')
         self.assertEqual(info.timing, False)
         # Cannot get or add timing when script is disabled.
         self.assertRaises(AssertionError, info.getTiming)
         self.assertRaises(AssertionError, info.addTiming, 0.3)
-        
+
         manager.enableScript('/plone/third')
         self.assertEqual(info.timing, False)
         # Cannot get or add timing when timing is disabled.
         self.assertRaises(AssertionError, info.getTiming)
         self.assertRaises(AssertionError, info.addTiming, 0.3)
-        
+
         # After re-enabling timing timing data should be reset.
         manager.enableTiming('/plone/third')
         self.assertEqual(info.timing, True)

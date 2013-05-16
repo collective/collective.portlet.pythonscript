@@ -53,7 +53,7 @@ class ScriptInfo(persistent.Persistent):
 
 class PythonScriptManager(object):
     """Store and manager of Python Scripts.
-    
+
     Keeps data in annotations on context object (Plone site).
     """
 

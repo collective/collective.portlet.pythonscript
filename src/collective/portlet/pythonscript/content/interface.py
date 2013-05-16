@@ -36,20 +36,20 @@ class IPythonScriptManager(Interface):
 
 class IScriptInfo(Interface):
     """Interface for objects containing meta information about scripts."""
-    
+
     title = Attribute(u'Script title')
     enabled = Attribute(u'Whether script is enabled for use in portlets')
     timing = Attribute(u'Whether script has executing time gathering turned on')
-    
+
     def addTiming(self, seconds):
         """Store execution time of a script.
 
         Parameter must be a float with number of seconds.
         """
-    
+
     def getTiming(self):
         """Calculate executing time summaries.
-        
+
         Returns a dictionary: {
             'min_time': minimal execution time,
             'max_time': maximal execution time,
