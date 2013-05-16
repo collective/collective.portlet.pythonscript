@@ -12,6 +12,12 @@ class IPythonScriptManager(Interface):
     def disableScript(self, name):
         """Disable given script."""
 
+    def enableTiming(self, name):
+        """Enable gathering execution times."""
+
+    def disableTiming(self, name):
+        """Disable gathering execution times."""
+
     def getInfo(self, name):
         """Retrieve information about the script."""
 
