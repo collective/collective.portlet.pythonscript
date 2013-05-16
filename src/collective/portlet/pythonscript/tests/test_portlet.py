@@ -20,11 +20,24 @@ class TestPortlet(TestBase):
         z2.login(self.app['acl_users'], 'admin')
         self.addPythonScript('first', u'First', 'return []')
         self.addPythonScript('second', u'Second', 'return []')
-        self.addPythonScript('third', u'Third', 'return []')
+        self.addPythonScript('third', u'Third', u"""
+from Products.CMFCore.utils import getToolByName
+portal_catalog = getToolByName(context, 'portal_catalog')
+return portal_catalog()""")
         manager = IPythonScriptManager(self.portal)
         manager.rescanScripts()
         manager.enableScript('/plone/second')
         manager.enableScript('/plone/third')
+
+        self.portal.invokeFactory("Folder", "folder")
+        folder = self.portal.folder
+        folder.setTitle(u'Folder')
+        folder.invokeFactory("Folder", "subfolder")
+        subfolder = folder.subfolder
+        subfolder.setTitle(u'Subfolder')
+        subfolder.invokeFactory("Document", "doc")
+        doc = subfolder.doc
+        doc.setTitle(u'Document')
     
     def tearDown(self):
         """Logout."""
@@ -65,6 +78,7 @@ class TestPortlet(TestBase):
         self.failUnless(isinstance(editview, PythonScriptPortletEditForm))
 
     def testRenderer(self):
+        """Test portlet renderer."""
         context = self.portal
         request = self.portal.REQUEST
         view = self.portal.restrictedTraverse('@@plone')
@@ -77,12 +91,15 @@ class TestPortlet(TestBase):
         self.failUnless(renderer.available,
             "Renderer should be available by default.")
         
+        self.assertEqual(renderer.portlet_title, u'My Portlet')
+        
         return renderer
 
     def testRendered(self):
+        """Test rendered content."""
         renderer = self.testRenderer()
-        self.assertEqual(renderer.portlet_title, u'My Portlet')
-        manager = self.getScriptManager()
-        script = manager.getScript('/plone/third')
-        result = renderer.run_script(script)
-        self.assertEqual(result, [])
+        html = renderer.render()
+        self.assertTrue(u'<span class="tile">My Portlet</span>' in html)
+        self.assertTrue(u'<a href="http://nohost/plone/folder" class="tile">' in html)
+        self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder" class="tile">' in html)
+        self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder/doc" class="tile">' in html)
