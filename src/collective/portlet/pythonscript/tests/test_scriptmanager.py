@@ -71,18 +71,18 @@ class TestScriptManager(TestBase):
         # Scripts are not visible until rescan.
         manager = self.getScriptManager()
         scripts = manager.getScripts()
-        name, info = scripts.next()
+        name, _info = scripts.next()
         self.assertEqual(name, '/plone/first')
         self.assertRaises(StopIteration, scripts.next)
         
         manager.rescanScripts()
         scripts = manager.getScripts()
         # Scripts should be ordered by title.
-        name, info = scripts.next()
+        name, _info = scripts.next()
         self.assertEqual(name, '/plone/third')
-        name, info = scripts.next()
+        name, _info = scripts.next()
         self.assertEqual(name, '/plone/first')
-        name, info = scripts.next()
+        name, _info = scripts.next()
         self.assertEqual(name, '/plone/second')
         self.assertRaises(StopIteration, scripts.next)
         
@@ -99,6 +99,6 @@ class TestScriptManager(TestBase):
         manager.enableScript('/plone/third')
         
         enabled = manager.getEnabledScripts()
-        name, info = enabled.next()
+        name, _info = enabled.next()
         self.assertEqual(name, '/plone/third')
         self.assertRaises(StopIteration, enabled.next)
