@@ -77,13 +77,13 @@ return portal_catalog()""")
         editview = getMultiAdapter((mapping['foo'], request), name='edit')
         self.failUnless(isinstance(editview, PythonScriptPortletEditForm))
 
-    def testRenderer(self):
+    def testRenderer(self, limit_results=None):
         """Test portlet renderer."""
         context = self.portal
         request = self.portal.REQUEST
         view = self.portal.restrictedTraverse('@@plone')
         manager = getUtility(IPortletManager, name='plone.rightcolumn', context=self.portal)
-        assignment = PythonScriptPortletAssignment(portlet_title=u"My Portlet", script_name="/plone/third", limit_results=None)
+        assignment = PythonScriptPortletAssignment(portlet_title=u"My Portlet", script_name="/plone/third", limit_results=limit_results)
 
         renderer = getMultiAdapter((context, request, view, manager, assignment), IPortletRenderer)
         self.failUnless(isinstance(renderer, PythonScriptPortletRenderer))
@@ -103,3 +103,12 @@ return portal_catalog()""")
         self.assertTrue(u'<a href="http://nohost/plone/folder" class="tile">' in html)
         self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder" class="tile">' in html)
         self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder/doc" class="tile">' in html)
+    
+    def testRenderedLimitedResults(self):
+        """Test rendered content with limiting results."""
+        renderer = self.testRenderer(limit_results=2)
+        html = renderer.render()
+        self.assertTrue(u'<span class="tile">My Portlet</span>' in html)
+        self.assertTrue(u'<a href="http://nohost/plone/folder" class="tile">' in html)
+        self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder" class="tile">' in html)
+        self.assertFalse(u'<a href="http://nohost/plone/folder/subfolder/doc" class="tile">' in html)
