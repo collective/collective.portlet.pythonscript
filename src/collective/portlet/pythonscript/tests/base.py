@@ -32,7 +32,7 @@ class TestBase(unittest.TestCase):
         ps = self.createPythonScript(id_, title, code)
         self.ploneSite[id_] = ps
         return ps
-    
+
     def getScriptManager(self):
         """Return script manager for Plone site."""
         return IPythonScriptManager(self.ploneSite)

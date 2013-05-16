@@ -10,7 +10,7 @@ class TestScriptManager(TestBase):
         self.assertRaises(StopIteration, scripts.next)
         enabled = manager.getEnabledScripts()
         self.assertRaises(StopIteration, enabled.next)
-        
+
     def testEmptyRescan(self):
         """Test if after rescanning an empty site, no scripts are listed."""
         manager = self.getScriptManager()
@@ -19,14 +19,14 @@ class TestScriptManager(TestBase):
         self.assertRaises(StopIteration, scripts.next)
         enabled = manager.getEnabledScripts()
         self.assertRaises(StopIteration, enabled.next)
-    
+
     def testSingleScript(self):
         """Test if after rescanning a single script is find."""
         ps = self.addPythonScript('first', u'First', 'return []')
-        
+
         # Script should not be visible until rescan.
         self.testEmpty()
-        
+
         manager = self.getScriptManager()
         # After rescan script should be visible...
         manager.rescanScripts()
@@ -42,7 +42,7 @@ class TestScriptManager(TestBase):
         enabled = manager.getEnabledScripts()
         self.assertRaises(StopIteration, enabled.next)
         return ps
-    
+
     def testGetInfoSingleScript(self):
         """Test retrieving script metadata."""
         self.testSingleScript()
@@ -53,7 +53,7 @@ class TestScriptManager(TestBase):
         self.assertEqual(info.enabled, False)
         self.assertEqual(info.timing, False)
         self.assertEqual(info.times, None)
-    
+
     def testGetScriptSingleScript(self):
         """Test retrieving script."""
         ps = self.testSingleScript()
@@ -67,14 +67,14 @@ class TestScriptManager(TestBase):
         first = self.testSingleScript()
         second = self.addPythonScript('second', None, 'return []')
         third = self.addPythonScript('third', u'A Third Script', 'return []')
-        
+
         # Scripts are not visible until rescan.
         manager = self.getScriptManager()
         scripts = manager.getScripts()
         name, _info = scripts.next()
         self.assertEqual(name, '/plone/first')
         self.assertRaises(StopIteration, scripts.next)
-        
+
         manager.rescanScripts()
         scripts = manager.getScripts()
         # Scripts should be ordered by title.
@@ -85,20 +85,46 @@ class TestScriptManager(TestBase):
         name, _info = scripts.next()
         self.assertEqual(name, '/plone/second')
         self.assertRaises(StopIteration, scripts.next)
-        
+
         enabled = manager.getEnabledScripts()
         self.assertRaises(StopIteration, enabled.next)
-        
+
         return [first, second, third]
-    
+
     def testEnableScript(self):
         """Test enabling script."""
         self.testMoreScripts()
-        
+
         manager = self.getScriptManager()
         manager.enableScript('/plone/third')
-        
+
         enabled = manager.getEnabledScripts()
         name, _info = enabled.next()
         self.assertEqual(name, '/plone/third')
+        self.assertRaises(StopIteration, enabled.next)
+
+    def testEnabledMoreScripts(self):
+        self.testEnableScript()
+
+        manager = self.getScriptManager()
+        manager.enableScript('/plone/first')
+
+        enabled = manager.getEnabledScripts()
+        name, _info = enabled.next()
+        self.assertEqual(name, '/plone/third')
+        name, _info = enabled.next()
+        self.assertEqual(name, '/plone/first')
+        self.assertRaises(StopIteration, enabled.next)
+
+    def testDisableScript(self):
+        self.testEnabledMoreScripts()
+
+        manager = self.getScriptManager()
+        self.assertRaises(AssertionError, manager.disableScript, '/plone/nonexisting')
+
+        manager.disableScript('/plone/third')
+
+        enabled = manager.getEnabledScripts()
+        name, _info = enabled.next()
+        self.assertEqual(name ,'/plone/first')
         self.assertRaises(StopIteration, enabled.next)
