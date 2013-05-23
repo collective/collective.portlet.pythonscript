@@ -44,7 +44,7 @@ setup(name='collective.portlet.pythonscript',
           'Plone',
           'plone.app.testing'
       ],
-      extras_require={'test': ['plone.app.testing']},
+
       entry_points="""
       # -*- Entry points: -*-
         [z3c.autoinclude.plugin]
