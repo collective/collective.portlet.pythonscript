@@ -44,12 +44,19 @@ setup(name='collective.portlet.pythonscript',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Plone',
+          'Products.CMFCore',
+          'Products.CMFPlone>=4.1',
+          'Products.GenericSetup',
+          'Products.statusmessages',
           'setuptools',
+          'zope.interface',
+          'zope.schema',
       ],
       extras_require={
           'test': [
               'plone.app.testing',
+              'unittest2',
+              'zope.component',
           ],
       },
       entry_points="""
