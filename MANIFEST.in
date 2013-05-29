@@ -1,4 +1,4 @@
-inlcude *.md *.txt
+include *.md *.txt
 
 recursive-include src *
 recursive-include docs *
