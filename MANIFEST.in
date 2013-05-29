@@ -1,7 +1,6 @@
+inlcude *.md *.txt
+
 recursive-include src *
-include buildout.cfg
-include bootstrap.py
-include CHANGES.txt
-include CONTRIBUTORS.txt
-include MANIFEST.in
-include README.md
+recursive-include docs *
+
+global-exclude *.pyc
