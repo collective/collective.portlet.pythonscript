@@ -1,8 +1,10 @@
 Changelog
 =========
 
-1.0-dev (unreleased)
+1.0.1 (June 25, 2013)
 --------------------
 
-- Package created using templer
-  []
+- Not displaying the portlet at all when there's no results
+  items returned
+  [radekj]
+
