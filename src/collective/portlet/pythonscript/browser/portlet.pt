@@ -3,6 +3,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       tal:omit-tag="">
 <dl class="portlet portletSearch portletPythonScript"
+    tal:condition="view/available"
     i18n:domain="plone">
 
   <dt class="portletHeader">

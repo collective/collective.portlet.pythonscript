@@ -88,6 +88,10 @@ class PythonScriptPortletRenderer(base.Renderer):
         """Returns portlet title."""
         return self.data.portlet_title
 
+    @property
+    def available(self):
+        return len(self.items)
+
     def run_script(self, script):
         """Execute Python Script."""
         # Change the context of the script to point to current portlet context.
