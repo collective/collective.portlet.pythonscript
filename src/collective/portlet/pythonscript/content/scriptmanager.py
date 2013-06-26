@@ -103,6 +103,23 @@ class PythonScriptManager(object):
             return u'%s (%s)' % (script.id, script.title)
         return script.id
 
+    def addScript(self, script):
+        """Add information about a script."""
+        self._addScript(self.data, self.data, script)
+
+    def _addScript(self, read_store, write_store, script):
+        """Internal procedure for updating script information."""
+        # Convert path from tuple to dot-separated list.
+        path = self.PATH_SEPARATOR.join(script.getPhysicalPath())
+        title = self.getScriptTitle(script)
+        # And save information about all found.
+        if path in read_store:
+            info = read_store[path]
+            info.title = title # Updated cached script title.
+        else:
+            info = ScriptInfo(title)
+        write_store[path] = info
+
     def rescanScripts(self):
         """Reset information about scripts."""
         data = self.data
@@ -115,16 +132,7 @@ class PythonScriptManager(object):
         data.clear()
         # Now we scan for scripts.
         for script in self.scanScripts():
-            # Convert path from tuple to dot-separated list.
-            path = self.PATH_SEPARATOR.join(script.getPhysicalPath())
-            title = self.getScriptTitle(script)
-            # And save information about all found.
-            if path in enabled:
-                info = enabled[path]
-                info.title = title # Updated cached script title.
-            else:
-                info = ScriptInfo(title)
-            data[path] = info
+            self._addScript(enabled, data, script)
 
     def getInfo(self, name):
         """Retrieve information about the script."""

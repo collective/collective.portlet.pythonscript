@@ -24,4 +24,11 @@
     name="python-scripts"
     />
 
+  <!-- events -->
+  <subscriber
+    for="*
+         zope.lifecycleevent.IObjectAddedEvent"
+    handler=".event.onObjectAdded"
+    />
+
 </configure>

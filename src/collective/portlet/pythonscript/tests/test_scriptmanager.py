@@ -24,12 +24,8 @@ class TestScriptManager(TestBase):
         """Test if after rescanning a single script is find."""
         ps = self.addPythonScript('first', u'First', 'return []')
 
-        # Script should not be visible until rescan.
-        self.testEmpty()
-
+        # Script should be visible immediately after creation.
         manager = self.getScriptManager()
-        # After rescan script should be visible...
-        manager.rescanScripts()
         scripts = manager.getScripts()
         name, info = scripts.next()
         self.assertEqual(name, '/plone/first')
@@ -68,14 +64,8 @@ class TestScriptManager(TestBase):
         second = self.addPythonScript('second', None, 'return []')
         third = self.addPythonScript('third', u'A Third Script', 'return []')
 
-        # Scripts are not visible until rescan.
+        # Scripts are visible immediately.
         manager = self.getScriptManager()
-        scripts = manager.getScripts()
-        name, _info = scripts.next()
-        self.assertEqual(name, '/plone/first')
-        self.assertRaises(StopIteration, scripts.next)
-
-        manager.rescanScripts()
         scripts = manager.getScripts()
         # Scripts should be ordered by title.
         name, _info = scripts.next()
@@ -97,7 +87,6 @@ class TestScriptManager(TestBase):
             self.ploneSite.portal_skins.custom)
         
         manager = self.getScriptManager()
-        manager.rescanScripts()
         scripts = manager.getScripts()
         name, _info = scripts.next()
         self.assertEqual(name, '/plone/portal_skins/custom/nested')

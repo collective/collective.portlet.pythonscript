@@ -6,6 +6,9 @@ class IPythonScriptManager(Interface):
     def rescanScripts(self):
         """Reset information about scripts."""
 
+    def addScript(self, script):
+        """Add information about a script."""
+
     def enableScript(self, name):
         """Enable given script."""
 
