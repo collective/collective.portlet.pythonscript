@@ -104,8 +104,16 @@ class PythonScriptPortletRenderer(base.Renderer):
         """Wrap results into form that is renderable for the portlet."""
         return [IPythonScriptPortletItem(result) for result in results]
 
+    _items = None
+
     @property
     def items(self):
+        """Cached list of results."""
+        if self._items is None:
+            self._items = self.getItems()
+        return self._items
+
+    def getItems(self):
         """Returns list of results to be rendered inside portlet."""
         portal_url = getToolByName(self.context, 'portal_url')
         portal = portal_url.getPortalObject()
