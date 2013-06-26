@@ -90,6 +90,18 @@ class TestScriptManager(TestBase):
         self.assertRaises(StopIteration, enabled.next)
 
         return [first, second, third]
+    
+    def testPortalSkinsScripts(self):
+        """Test if skins inside portal_skins/custom directory can be scanned."""
+        self.addPythonScript('nested', u'Nested', 'return []',
+            self.ploneSite.portal_skins.custom)
+        
+        manager = self.getScriptManager()
+        manager.rescanScripts()
+        scripts = manager.getScripts()
+        name, _info = scripts.next()
+        self.assertEqual(name, '/plone/portal_skins/custom/nested')
+        self.assertRaises(StopIteration, scripts.next)
 
     def testEnableScript(self):
         """Test enabling script."""

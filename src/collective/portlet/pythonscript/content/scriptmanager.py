@@ -76,12 +76,26 @@ class PythonScriptManager(object):
         # }
         self.data = annotations.setdefault(self.ANNOTATION_KEY, OOBTree.OOBTree())
 
-    def scanScripts(self, context):
+    # Where to search for Python script objects in the Plone site.
+    SEARCHABLE_CONTAINER_PATHS = [
+        (), # Plone Site
+        ('portal_skins', 'custom') # "custom" directory.
+    ]
+
+    def getScriptContainers(self):
+        """Yield containers that the scripts should be searched in."""
+        for path in self.SEARCHABLE_CONTAINER_PATHS:
+            context = self.context
+            for path_element in path:
+                context = context[path_element]
+            yield context
+
+    def scanScripts(self):
         """Find scripts in given context."""
-        for item in context.objectValues('Script (Python)'):
-            yield item
-        # For now only scripts from the top-level Plone site will be found.
-        # Maybe in the future we should also find scripts recursively (expensive).
+        for context in self.getScriptContainers():
+            # Find all Script (Python) objects in each container.
+            for item in context.objectValues('Script (Python)'):
+                yield item
 
     def getScriptTitle(self, script):
         """Generate title of the script."""
@@ -100,7 +114,7 @@ class PythonScriptManager(object):
         # Clear previous data.
         data.clear()
         # Now we scan for scripts.
-        for script in self.scanScripts(self.context):
+        for script in self.scanScripts():
             # Convert path from tuple to dot-separated list.
             path = self.PATH_SEPARATOR.join(script.getPhysicalPath())
             title = self.getScriptTitle(script)

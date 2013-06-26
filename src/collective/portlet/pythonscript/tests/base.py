@@ -27,10 +27,12 @@ class TestBase(unittest.TestCase):
         ps._makeFunction()
         return ps
 
-    def addPythonScript(self, id_, title, code):
+    def addPythonScript(self, id_, title, code, container=None):
         """Add new Python Script to Plone Site."""
         ps = self.createPythonScript(id_, title, code)
-        self.ploneSite[id_] = ps
+        if container is None:
+            container = self.ploneSite
+        container[id_] = ps
         return ps
 
     def getScriptManager(self):
