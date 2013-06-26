@@ -33,7 +33,7 @@ class TestScriptManager(TestBase):
         scripts = manager.getScripts()
         name, info = scripts.next()
         self.assertEqual(name, '/plone/first')
-        self.assertEqual(info.title, u'First')
+        self.assertEqual(info.title, u'first (First)')
         self.assertEqual(info.enabled, False)
         self.assertEqual(info.timing, False)
         self.assertEqual(info.times, None)
@@ -49,7 +49,7 @@ class TestScriptManager(TestBase):
         manager = self.getScriptManager()
         self.assertRaises(KeyError, manager.getInfo, '/plone/nonexisting')
         info = manager.getInfo('/plone/first')
-        self.assertEqual(info.title, u'First')
+        self.assertEqual(info.title, u'first (First)')
         self.assertEqual(info.enabled, False)
         self.assertEqual(info.timing, False)
         self.assertEqual(info.times, None)
@@ -79,11 +79,11 @@ class TestScriptManager(TestBase):
         scripts = manager.getScripts()
         # Scripts should be ordered by title.
         name, _info = scripts.next()
-        self.assertEqual(name, '/plone/third')
-        name, _info = scripts.next()
         self.assertEqual(name, '/plone/first')
         name, _info = scripts.next()
         self.assertEqual(name, '/plone/second')
+        name, _info = scripts.next()
+        self.assertEqual(name, '/plone/third')
         self.assertRaises(StopIteration, scripts.next)
 
         enabled = manager.getEnabledScripts()
@@ -112,9 +112,9 @@ class TestScriptManager(TestBase):
 
         enabled = manager.getEnabledScripts()
         name, _info = enabled.next()
-        self.assertEqual(name, '/plone/third')
-        name, _info = enabled.next()
         self.assertEqual(name, '/plone/first')
+        name, _info = enabled.next()
+        self.assertEqual(name, '/plone/third')
         self.assertRaises(StopIteration, enabled.next)
 
     def testDisableScript(self):

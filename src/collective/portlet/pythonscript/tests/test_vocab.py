@@ -10,7 +10,7 @@ class TestVocabulary(TestScriptManager):
         """Check if vocabulary returns expected tokens."""
         factory = getUtility(IVocabularyFactory, 'python-scripts')
         vocabulary = factory(self.ploneSite)
-        tokens = [term.token for term in vocabulary]
+        tokens = [(term.token, term.title) for term in vocabulary]
         self.assertEqual(tokens, expectedTokens)
 
     def testEmpty(self):
@@ -40,17 +40,35 @@ class TestVocabulary(TestScriptManager):
     def testEnableScript(self):
         """Test enabling script."""
         result = super(TestVocabulary, self).testEnableScript()
-        self.assertVocabulary(['/plone/third'])
+        self.assertVocabulary([
+            ('/plone/third', u'third (A Third Script)')
+        ])
         return result
 
     def testEnableMoreScripts(self):
         """Test enabling more scripts."""
         result = super(TestVocabulary, self).testEnableMoreScripts()
-        self.assertVocabulary(['/plone/third', '/plone/first'])
+        self.assertVocabulary([
+            ('/plone/first', u'first (First)'),
+            ('/plone/third', u'third (A Third Script)')
+        ])
         return result
 
     def testDisableScript(self):
         """Test disabling scripts."""
         result = super(TestVocabulary, self).testDisableScript()
-        self.assertVocabulary(['/plone/first'])
+        self.assertVocabulary([
+            ('/plone/first', u'first (First)')
+        ])
         return result
+
+    def testUntitledScript(self):
+        """Test if ID is used for untitled scripts."""
+        self.testEnableScript()
+        ps = self.addPythonScript('four', None, 'return []')
+        manager = self.getScriptManager()
+        manager.enableScript('/plone/second')
+        self.assertVocabulary([
+            ('/plone/second', u'second'),
+            ('/plone/third', u'third (A Third Script)')
+        ])

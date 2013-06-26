@@ -83,6 +83,12 @@ class PythonScriptManager(object):
         # For now only scripts from the top-level Plone site will be found.
         # Maybe in the future we should also find scripts recursively (expensive).
 
+    def getScriptTitle(self, script):
+        """Generate title of the script."""
+        if script.title:
+            return u'%s (%s)' % (script.id, script.title)
+        return script.id
+
     def rescanScripts(self):
         """Reset information about scripts."""
         data = self.data
@@ -97,12 +103,13 @@ class PythonScriptManager(object):
         for script in self.scanScripts(self.context):
             # Convert path from tuple to dot-separated list.
             path = self.PATH_SEPARATOR.join(script.getPhysicalPath())
+            title = self.getScriptTitle(script)
             # And save information about all found.
             if path in enabled:
                 info = enabled[path]
-                info.title = script.title # Updated cached script title.
+                info.title = title # Updated cached script title.
             else:
-                info = ScriptInfo(script.title)
+                info = ScriptInfo(title)
             data[path] = info
 
     def getInfo(self, name):

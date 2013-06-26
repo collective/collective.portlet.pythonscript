@@ -21,7 +21,8 @@ class TestBase(unittest.TestCase):
     def createPythonScript(self, id_, title, code):
         """Creare new Python Script object."""
         ps = PythonScript(id_)
-        ps.ZPythonScript_setTitle(title)
+        if title:
+            ps.ZPythonScript_setTitle(title)
         ps.write(code)
         ps._makeFunction()
         return ps
