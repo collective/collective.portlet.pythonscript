@@ -40,7 +40,7 @@ class IPythonScriptPortlet(IPortletDataProvider):
 
     template_name = schema.Choice(
         title=_(u"Template"),
-        description=_(u"ID of the view to use to render list of results"),
+        description=_(u"Template to use to render list of results"),
         required=True,
         source='python-scripts-templates'
     )

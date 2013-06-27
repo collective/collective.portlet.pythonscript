@@ -6,7 +6,7 @@ from collective.portlet.pythonscript.browser.renderer import IResultsList, IResu
 def TemplatesVocabFactory(context):
     """Produces Python Scripts vocabulary for given context."""
     terms = [
-        SimpleVocabulary.createTerm(name, name, name)
-        for name, _adapter in getAdapters((IResultsList([]), context.REQUEST), IResultsRenderer)
+        SimpleVocabulary.createTerm(name, name, u'%s (%s)' % (name, adapter.title))
+        for name, adapter in getAdapters((IResultsList([]), context.REQUEST), IResultsRenderer)
     ]
     return SimpleVocabulary(terms)
