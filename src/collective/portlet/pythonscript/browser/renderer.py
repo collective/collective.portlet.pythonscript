@@ -1,8 +1,12 @@
 from zope.interface import Interface, implements, Attribute
 from zope.publisher.browser import BrowserView
-from zope.app.pagetemplate import ViewPageTemplateFile
 from zope.browser.interfaces import IBrowserView
 from Products.CMFPlone import PloneMessageFactory as _
+try:
+    from zope.app.pagetemplate import ViewPageTemplateFile
+except ImportError:
+    # In Plone 4.3 module name changed.
+    from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
 class IResultsList(Interface):
     """Interface for list of results to render in the portlet."""
