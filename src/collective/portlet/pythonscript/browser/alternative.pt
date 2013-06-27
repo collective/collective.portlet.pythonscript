@@ -8,13 +8,9 @@
             tal:define="oddrow repeat/item/odd"
             tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
 
-            <a href="#"
-                tal:attributes="href string:${item/getURL}"
-                class="tile">
                 <span tal:replace="item/Title">
                     Title
                 </span>
-            </a>
-        </dd>
+    </dd>
   </tal:result>
 </html>

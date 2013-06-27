@@ -9,10 +9,9 @@ from zope.interface import implements
 from plone.app.portlets.portlets import base
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
-from collective.portlet.pythonscript.content.interface import IPythonScriptManager,\
-    IPythonScriptPortletItem
+from collective.portlet.pythonscript.content.interface import IPythonScriptManager
 from zope.component import getMultiAdapter
-from collective.portlet.pythonscript.browser.renderer import ResultsList
+from collective.portlet.pythonscript.browser.renderer import IResultsList
 
 logger = logging.getLogger(__name__)
 
@@ -39,21 +38,24 @@ class IPythonScriptPortlet(IPortletDataProvider):
         min=1
     )
 
-#     template_name = schema.Choice(
-#         title=_(u"Template"),
-#         description=_(u""),
-#         required=True,
-#         source='templates'
-#     )
+    template_name = schema.Choice(
+        title=_(u"Template"),
+        description=_(u"ID of the view to use to render list of results"),
+        required=True,
+        source='python-scripts-templates'
+    )
 
 class PythonScriptPortletAssignment(base.Assignment):
     """Assignment of Python Script portlet."""
     implements(IPythonScriptPortlet)
 
-    def __init__(self, portlet_title=u"", script_name=None, limit_results=None):
+    template_name = u'default'
+
+    def __init__(self, portlet_title=u"", script_name=None, limit_results=None, template_name=None):
         self.portlet_title = portlet_title
         self.script_name = script_name
         self.limit_results = limit_results
+        self.template_name = None
 
     @property
     def title(self):
@@ -72,7 +74,8 @@ class PythonScriptPortletAddForm(base.AddForm):
         return PythonScriptPortletAssignment(
             portlet_title=data['portlet_title'],
             script_name=data['script_name'],
-            limit_results=data['limit_results']
+            limit_results=data['limit_results'],
+            template_name=data['template_name']
         )
 
 class PythonScriptPortletEditForm(base.EditForm):
@@ -111,7 +114,7 @@ class PythonScriptPortletRenderer(base.Renderer):
 
     def wrap_results(self, results):
         """Wrap results into form that is renderable for the portlet."""
-        return ResultsList(IPythonScriptPortletItem(result) for result in results)
+        return IResultsList(results)
     
     def renderResults(self):
         """Return rendered list of results."""

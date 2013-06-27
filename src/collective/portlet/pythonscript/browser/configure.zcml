@@ -76,18 +76,32 @@
         />
         
     <!-- rendering -->
-    <browser:view
-        for=".renderer.IResultsList"
-        class=".renderer.DefaultResultsRenderer"
-        name="default"
-        permission="zope2.Public"
+    <adapter
+        for="*"
+        provides=".renderer.IResultsList"
+        factory=".renderer.ResultsList"
         />
-        
-    <!-- <adapter
-        for=".renderer.IResultsList * *"
+    
+    
+    <adapter
+        for=".renderer.IResultsList *"
         provides=".renderer.IResultsRenderer"
-        factory=".renderer.DefaultResultsRenderer"
         name="default"
-        /> -->
+        factory=".renderer.DefaultResultsRenderer"
+        />
+    
+    <adapter
+        for=".renderer.IResultsList *"
+        provides=".renderer.IResultsRenderer"
+        name="alternative"
+        factory=".renderer.AlternativeResultsRenderer"
+        />
+
+    <!-- vocabulary -->
+    <utility
+        provides="zope.schema.interfaces.IVocabularyFactory"
+        component=".vocab.TemplatesVocabFactory"
+        name="python-scripts-templates"
+        />
 
 </configure>

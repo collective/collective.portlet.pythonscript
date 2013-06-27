@@ -10,13 +10,6 @@
     factory=".scriptmanager.PythonScriptManager"
     />
 
-  <!-- rendering portlet items -->
-  <adapter
-    for="Products.ZCatalog.interfaces.ICatalogBrain"
-    provides=".interface.IPythonScriptPortletItem"
-    factory=".brains.CatalogBrainPythonScriptPortletAdapter"
-    />
-
   <!-- vocabulary -->
   <utility
     provides="zope.schema.interfaces.IVocabularyFactory"
