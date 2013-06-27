@@ -55,7 +55,7 @@ class PythonScriptPortletAssignment(base.Assignment):
         self.portlet_title = portlet_title
         self.script_name = script_name
         self.limit_results = limit_results
-        self.template_name = None
+        self.template_name = template_name
 
     @property
     def title(self):
