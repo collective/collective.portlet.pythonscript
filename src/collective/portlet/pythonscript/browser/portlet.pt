@@ -11,23 +11,13 @@
       <span class="tile" tal:content="view/portlet_title">Portlet title</span>
       <span class="portletTopRight"></span>
   </dt>
-  <tal:result tal:repeat="item view/items">
-    <dd class="portletItem oddrow"
-            tal:define="oddrow repeat/item/odd"
-            tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
 
-            <a href="#"
-                tal:attributes="href string:${item/url}"
-                class="tile">
-                <span tal:replace="item/title">
-                    Title
-                </span>
-            </a>
-        </dd>
-  </tal:result>
-    <dd class="portletFooter">
-        <span class="portletBottomLeft"></span>
-        <span class="portletBottomRight"></span>
-    </dd>
+  <tal:results content="structure view/renderResults" />
+
+  <dd class="portletFooter">
+      <span class="portletBottomLeft"></span>
+      <span class="portletBottomRight"></span>
+  </dd>
+
 </dl>
 </html>

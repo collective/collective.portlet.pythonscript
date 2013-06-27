@@ -20,7 +20,7 @@
         permission="cmf.ManagePortal"
         template="controlpanel.pt"
         />
-    
+
     <!-- control panel -->
     <browser:page
         name="checksyntax_pythonscript"
@@ -74,5 +74,20 @@
         addview=".portlet.PythonScriptPortletAddForm"
         editview=".portlet.PythonScriptPortletEditForm"
         />
+        
+    <!-- rendering -->
+    <browser:view
+        for=".renderer.IResultsList"
+        class=".renderer.DefaultResultsRenderer"
+        name="default"
+        permission="zope2.Public"
+        />
+        
+    <!-- <adapter
+        for=".renderer.IResultsList * *"
+        provides=".renderer.IResultsRenderer"
+        factory=".renderer.DefaultResultsRenderer"
+        name="default"
+        /> -->
 
 </configure>

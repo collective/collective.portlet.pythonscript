@@ -11,6 +11,8 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 from collective.portlet.pythonscript.content.interface import IPythonScriptManager,\
     IPythonScriptPortletItem
+from zope.component import getMultiAdapter
+from collective.portlet.pythonscript.browser.renderer import ResultsList
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +38,13 @@ class IPythonScriptPortlet(IPortletDataProvider):
         required=False,
         min=1
     )
+
+#     template_name = schema.Choice(
+#         title=_(u"Template"),
+#         description=_(u""),
+#         required=True,
+#         source='templates'
+#     )
 
 class PythonScriptPortletAssignment(base.Assignment):
     """Assignment of Python Script portlet."""
@@ -102,7 +111,13 @@ class PythonScriptPortletRenderer(base.Renderer):
 
     def wrap_results(self, results):
         """Wrap results into form that is renderable for the portlet."""
-        return [IPythonScriptPortletItem(result) for result in results]
+        return ResultsList(IPythonScriptPortletItem(result) for result in results)
+    
+    def renderResults(self):
+        """Return rendered list of results."""
+        renderer = getMultiAdapter((self.items, self.request), name=u"default")
+        #renderer = getMultiAdapter((self.items, self.context, self.request), IResultsRenderer)
+        return renderer()
 
     _items = None
 
