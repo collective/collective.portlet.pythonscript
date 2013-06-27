@@ -2,7 +2,6 @@ from zope.schema.vocabulary import SimpleVocabulary
 from zope.component import getAdapters
 from zope.interface import Interface
 from collective.portlet.pythonscript.browser.renderer import IResultsList, IResultsRenderer
-from zope.browser.interfaces import IBrowserView
 
 def TemplatesVocabFactory(context):
     """Produces Python Scripts vocabulary for given context."""

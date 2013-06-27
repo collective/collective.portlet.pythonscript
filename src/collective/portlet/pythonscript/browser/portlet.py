@@ -11,7 +11,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 from collective.portlet.pythonscript.content.interface import IPythonScriptManager
 from zope.component import getMultiAdapter
-from collective.portlet.pythonscript.browser.renderer import IResultsList
+from collective.portlet.pythonscript.browser.renderer import IResultsList, IResultsRenderer
 
 logger = logging.getLogger(__name__)
 
@@ -118,8 +118,8 @@ class PythonScriptPortletRenderer(base.Renderer):
     
     def renderResults(self):
         """Return rendered list of results."""
-        renderer = getMultiAdapter((self.items, self.request), name=u"default")
-        #renderer = getMultiAdapter((self.items, self.context, self.request), IResultsRenderer)
+        name = self.data.template_name
+        renderer = getMultiAdapter((self.items, self.request), IResultsRenderer, name=name)
         return renderer()
 
     _items = None

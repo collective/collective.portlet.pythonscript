@@ -13,7 +13,7 @@ class ResultsList(list):
 class IResultsRenderer(IBrowserView):
     """Interface for results renderer."""
 
-    def __call__(self):
+    def __call__(self, results):
         """Render results."""
 
 class DefaultResultsRenderer(BrowserView):
