@@ -8,13 +8,6 @@ except ImportError:
     # In Plone 4.3 module name changed.
     from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
-class IResultsList(Interface):
-    """Interface for list of results to render in the portlet."""
-
-class ResultsList(list):
-    """Result list implementation."""
-    implements(IResultsList)
-
 class IResultsRenderer(IBrowserView):
     """Interface for results renderer."""
 
@@ -32,9 +25,9 @@ class DefaultResultsRenderer(BrowserView):
 
     template = ViewPageTemplateFile('renderer.pt')
 
-    def __call__(self):
+    def __call__(self, results):
         """Render results."""
-        return self.template()
+        return self.template(results=results)
 
 class AlternativeResultsRenderer(DefaultResultsRenderer):
     """Alternative list renderer."""

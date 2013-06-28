@@ -76,22 +76,17 @@
         />
         
     <!-- rendering -->
-    <adapter
-        for="*"
-        provides=".renderer.IResultsList"
-        factory=".renderer.ResultsList"
-        />
     
     
     <adapter
-        for=".renderer.IResultsList *"
+        for="* *"
         provides=".renderer.IResultsRenderer"
         name="default"
         factory=".renderer.DefaultResultsRenderer"
         />
     
     <adapter
-        for=".renderer.IResultsList *"
+        for="* *"
         provides=".renderer.IResultsRenderer"
         name="alternative"
         factory=".renderer.AlternativeResultsRenderer"

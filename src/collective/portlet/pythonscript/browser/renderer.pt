@@ -3,7 +3,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       tal:omit-tag="">
 
-  <tal:result tal:repeat="item context">
+  <tal:result tal:repeat="item options/results">
     <dd class="portletItem oddrow"
             tal:define="oddrow repeat/item/odd"
             tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">

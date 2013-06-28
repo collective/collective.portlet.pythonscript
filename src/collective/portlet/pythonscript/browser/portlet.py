@@ -11,7 +11,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 from collective.portlet.pythonscript.content.interface import IPythonScriptManager
 from zope.component import getMultiAdapter
-from collective.portlet.pythonscript.browser.renderer import IResultsList, IResultsRenderer
+from collective.portlet.pythonscript.browser.renderer import IResultsRenderer
 
 logger = logging.getLogger(__name__)
 
@@ -114,13 +114,14 @@ class PythonScriptPortletRenderer(base.Renderer):
 
     def wrap_results(self, results):
         """Wrap results into form that is renderable for the portlet."""
-        return IResultsList(results)
+        # For now no need to format.
+        return results
     
     def renderResults(self):
         """Return rendered list of results."""
         name = self.data.template_name
-        renderer = getMultiAdapter((self.items, self.request), IResultsRenderer, name=name)
-        return renderer()
+        renderer = getMultiAdapter((self.context, self.request), IResultsRenderer, name=name)
+        return renderer(self.items)
 
     _items = None
 
