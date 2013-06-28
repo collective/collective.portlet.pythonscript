@@ -1,12 +1,8 @@
 from zope.interface import Interface, implements, Attribute
-from zope.publisher.browser import BrowserView
 from zope.browser.interfaces import IBrowserView
+from Products.Five.browser import BrowserView
 from Products.CMFPlone import PloneMessageFactory as _
-try:
-    from zope.app.pagetemplate import ViewPageTemplateFile
-except ImportError:
-    # In Plone 4.3 module name changed.
-    from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 class IResultsRenderer(IBrowserView):
     """Interface for results renderer."""
