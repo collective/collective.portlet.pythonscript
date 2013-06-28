@@ -1,9 +1,12 @@
 Changelog
 =========
 
-1.1-dev (unreleased)
---------------------
+1.1 (June 28, 2013)
+-----------------------
 
+- Possibility to register custom templates for rendering the
+  python script's results
+  [kurazu]
 
 1.0.1 (June 25, 2013)
 --------------------
