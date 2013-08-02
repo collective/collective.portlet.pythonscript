@@ -14,6 +14,10 @@
 
   <tal:results content="structure view/renderResults" />
 
+  <tal:text condition="view/props/text | nothing">
+      <span tal:content="view/props/text" />
+  </tal:text>
+
   <dd class="portletFooter">
       <span class="portletBottomLeft"></span>
       <span class="portletBottomRight"></span>
