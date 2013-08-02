@@ -121,19 +121,29 @@ class PythonScriptPortletRenderer(base.Renderer):
         """Return rendered list of results."""
         name = self.data.template_name
         renderer = getMultiAdapter((self.context, self.request), IResultsRenderer, name=name)
-        return renderer(self.items)
+        return renderer(self.items, **self.props)
 
     _items = None
+    _props = None
 
     @property
     def items(self):
         """Cached list of results."""
         if self._items is None:
-            self._items = self.getItems()
+            self._items, self._props = self.getItemsAndProps()
         return self._items
 
-    def getItems(self):
-        """Returns list of results to be rendered inside portlet."""
+    @property
+    def props(self):
+        """Cached properties."""
+        return self._props
+
+    def getItemsAndProps(self):
+        """Depending on what is returned by the python script,
+        returns a list of results to be rendered inside portlet or
+        a dict that contains the iterable value under the 'results' key
+        and other properties to be rendered in the portlet.
+        """
         portal_url = getToolByName(self.context, 'portal_url')
         portal = portal_url.getPortalObject()
         manager = IPythonScriptManager(portal)
@@ -142,23 +152,34 @@ class PythonScriptPortletRenderer(base.Renderer):
             info = manager.getInfo(script_name)
         except KeyError:
             logger.exception(u'Could not find script %r' % script_name)
-            return []
+            return [], {}
         if not info.enabled:
             logger.warning(u'Script %r is not enabled' % script_name)
-            return []
+            return [], {}
         script = manager.getScript(script_name)
         before = time()
         try:
             results = self.run_script(script)
         except Exception:
             logger.exception(u'Error while running script %r' % script_name)
-            return []
+            return [], {}
         else:
             timing = time() - before
             logger.info(u'Script %r executed successfully in %.3f sec' % (script_name, timing))
             if info.timing:
                 info.addTiming(timing)
+
+            if isinstance(results, dict):
+                if not results.has_key('results'):
+                    raise ValueError
+                props = results
+                results = props.pop('results')
+            else:
+                props = {}
+
             limit = self.data.limit_results
             if limit:
                 results = results[:limit]
-            return self.wrap_results(results)
+            results = self.wrap_results(results)
+            return results, props
+

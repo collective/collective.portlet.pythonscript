@@ -1,0 +1,24 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      tal:omit-tag="">
+
+  <tal:result tal:repeat="item options/results">
+    <dd class="portletItem oddrow"
+            tal:define="oddrow repeat/item/odd"
+            tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
+
+            <tal:icon condition="options/icon_url | nothing">
+                <img tal:attributes="href options/icon_url" />
+            </tal:icon>
+
+            <a href="#"
+                tal:attributes="href string:${item/getURL}"
+                class="tile">
+                <span tal:replace="item/Title">
+                    Title
+                </span>
+            </a>        
+    </dd>
+  </tal:result>
+</html>

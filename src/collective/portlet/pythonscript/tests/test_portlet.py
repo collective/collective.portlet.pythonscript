@@ -24,10 +24,16 @@ class TestPortlet(TestBase):
 from Products.CMFCore.utils import getToolByName
 portal_catalog = getToolByName(context, 'portal_catalog')
 return portal_catalog()""")
+        self.addPythonScript('fourth', u'Fourth', u"""
+from Products.CMFCore.utils import getToolByName
+portal_catalog = getToolByName(context, 'portal_catalog')
+return {'results':portal_catalog(), 'text':'Additional text', 'icon_url': '/link/to/icon.png'}
+""")
         manager = IPythonScriptManager(self.portal)
         manager.rescanScripts()
         manager.enableScript('/plone/second')
         manager.enableScript('/plone/third')
+        manager.enableScript('/plone/fourth')
 
         self.portal.invokeFactory("Folder", "folder")
         folder = self.portal.folder
@@ -95,36 +101,35 @@ return portal_catalog()""")
         editview = getMultiAdapter((mapping['foo'], request), name='edit')
         self.failUnless(isinstance(editview, PythonScriptPortletEditForm))
 
-    def testRenderer(self, limit_results=None, template_name=u'default'):
+    def testRenderer(self, script_name='/plone/third', limit_results=None, template_name=u'default'):
         """Test portlet renderer."""
         context = self.portal
         request = self.portal.REQUEST
         view = self.portal.restrictedTraverse('@@plone')
         manager = getUtility(IPortletManager, name='plone.rightcolumn', context=self.portal)
-        assignment = PythonScriptPortletAssignment(portlet_title=u"My Portlet", script_name="/plone/third", limit_results=limit_results, template_name=template_name)
+        assignment = PythonScriptPortletAssignment(portlet_title=u"My Portlet", script_name=script_name, limit_results=limit_results, template_name=template_name)
 
         renderer = getMultiAdapter((context, request, view, manager, assignment), IPortletRenderer)
         self.failUnless(isinstance(renderer, PythonScriptPortletRenderer))
-
         self.failUnless(renderer.available,
             "Renderer should be available by default.")
 
         self.assertEqual(renderer.portlet_title, u'My Portlet')
-
         return renderer
 
     def testRendered(self):
         """Test rendered content."""
-        renderer = self.testRenderer()
+        renderer = self.testRenderer('/plone/third')
         html = renderer.render()
         self.assertTrue(u'<span class="tile">My Portlet</span>' in html)
         self.assertTrue(u'<a href="http://nohost/plone/folder" class="tile">' in html)
         self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder" class="tile">' in html)
         self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder/doc" class="tile">' in html)
-    
+        self.assertFalse(u'<span>Additional text</span>' in html)
+ 
     def testRenderedAlternative(self):
         """Test rendered content with alternative template."""
-        renderer = self.testRenderer(template_name=u'alternative')
+        renderer = self.testRenderer('/plone/third', template_name=u'alternative')
         html = renderer.render()
         self.assertTrue(u'<span class="tile">My Portlet</span>' in html)
         self.assertTrue(u'<a href="http://nohost/plone/folder" class="tile">' not in html)
@@ -133,9 +138,21 @@ return portal_catalog()""")
 
     def testRenderedLimitedResults(self):
         """Test rendered content with limiting results."""
-        renderer = self.testRenderer(limit_results=2)
+        renderer = self.testRenderer('/plone/third', limit_results=2)
         html = renderer.render()
         self.assertTrue(u'<span class="tile">My Portlet</span>' in html)
         self.assertTrue(u'<a href="http://nohost/plone/folder" class="tile">' in html)
         self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder" class="tile">' in html)
         self.assertFalse(u'<a href="http://nohost/plone/folder/subfolder/doc" class="tile">' in html)
+
+    def testRenderedWithProperties(self):
+        """Test rendered content with additional properties returned by the pytohon script."""
+        renderer = self.testRenderer('/plone/fourth', template_name=u'with_props')
+        html = renderer.render()
+        self.assertTrue(u'<span class="tile">My Portlet</span>' in html)
+        self.assertTrue(u'<a href="http://nohost/plone/folder" class="tile">' in html)
+        self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder" class="tile">' in html)
+        self.assertTrue(u'<a href="http://nohost/plone/folder/subfolder/doc" class="tile">' in html)
+        self.assertTrue(u'<span>Additional text</span>' in html)
+        self.assertTrue(u'<img href="/link/to/icon.png" />' in html)
+

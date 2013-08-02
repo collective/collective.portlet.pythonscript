@@ -9,7 +9,7 @@ class IResultsRenderer(IBrowserView):
 
     title = Attribute(u"Displayable name of the template")
 
-    def __call__(self, results):
+    def __call__(self, results, **kwargs):
         """Render results."""
 
 class DefaultResultsRenderer(BrowserView):
@@ -21,9 +21,9 @@ class DefaultResultsRenderer(BrowserView):
 
     template = ViewPageTemplateFile('renderer.pt')
 
-    def __call__(self, results):
+    def __call__(self, results, **kwargs):
         """Render results."""
-        return self.template(results=results)
+        return self.template(results=results, **kwargs)
 
 class AlternativeResultsRenderer(DefaultResultsRenderer):
     """Alternative list renderer."""
@@ -31,3 +31,10 @@ class AlternativeResultsRenderer(DefaultResultsRenderer):
     title = _(u"No links template")
 
     template = ViewPageTemplateFile('alternative.pt')
+
+class ResultsRendererWithProps(DefaultResultsRenderer):
+    """List renderer displaying properties."""
+
+    title = _(u"With properties")
+
+    template = ViewPageTemplateFile('with_props.pt')

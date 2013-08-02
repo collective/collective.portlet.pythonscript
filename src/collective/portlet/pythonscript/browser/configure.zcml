@@ -92,6 +92,13 @@
         factory=".renderer.AlternativeResultsRenderer"
         />
 
+    <adapter
+        for="* *"
+        provides=".renderer.IResultsRenderer"
+        name="with_props"
+        factory=".renderer.ResultsRendererWithProps"
+        />
+
     <!-- vocabulary -->
     <utility
         provides="zope.schema.interfaces.IVocabularyFactory"

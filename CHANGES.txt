@@ -1,9 +1,12 @@
 Changelog
 =========
 
-1.1.1-dev (unreleased)
-----------------------
+1.2 (August 02, 2013)
+---------------------
 
+- Added possibility to pass additional properties to be rendered
+  in the portlet
+  [radekj]
 
 1.1 (June 28, 2013)
 -------------------
