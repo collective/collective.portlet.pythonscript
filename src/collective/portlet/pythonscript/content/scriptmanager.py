@@ -99,8 +99,7 @@ class PythonScriptManager(object):
         """Find scripts in given context."""
         for context in self.getScriptContainers():
             # Find all Script (Python) objects in each container.
-            context.objectValues(self.SEARCHABLE_SCRIPT_TYPES)
-            for item in context.objectValues('Script (Python)'):
+            for item in context.objectValues(self.SEARCHABLE_SCRIPT_TYPES):
                 yield item
 
     def getScriptTitle(self, script):
