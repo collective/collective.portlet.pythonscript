@@ -1,8 +1,11 @@
 Changelog
 =========
 
-1.2.1 (unreleased)
-------------------
+1.2.1 (September 11, 2013)
+--------------------------
+
+- Added possibility of scanning filesysem scripts 
+  [radekj]
 
 
 1.2 (August 02, 2013)
