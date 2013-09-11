@@ -82,6 +82,11 @@ class PythonScriptManager(object):
         ('portal_skins', 'custom') # "custom" directory.
     ]
 
+    SEARCHABLE_SCRIPT_TYPES = [
+        'Script (Python)',
+        'Filesystem Script (Python)',
+    ]
+
     def getScriptContainers(self):
         """Yield containers that the scripts should be searched in."""
         for path in self.SEARCHABLE_CONTAINER_PATHS:
@@ -94,6 +99,7 @@ class PythonScriptManager(object):
         """Find scripts in given context."""
         for context in self.getScriptContainers():
             # Find all Script (Python) objects in each container.
+            context.objectValues(self.SEARCHABLE_SCRIPT_TYPES)
             for item in context.objectValues('Script (Python)'):
                 yield item
 
